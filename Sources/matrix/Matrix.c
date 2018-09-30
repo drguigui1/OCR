@@ -1,29 +1,46 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "../../Headers/Matrix.h"
+#include "./../../Headers/Matrix.h"
 
-struct Matrix
+/*struct Matrix
 {
 	int rows;
 	int columns;
 	int *pt;
-};
-
+};*/
+/*
 int main()
 {
-	/*Matrix m = init_matrix(5,5);
-	*(m.pt + m.columns - 1) = 5;
-	//m = transpose_matrix(m);
+	Matrix m1 = init_matrix(2,3);
+	Matrix m2 = init_matrix(3,2);
 	
-	for (int i = 0; i < m.rows; i++)
+	Matrix m3;
+
+	*(m1.pt) = 1;
+	*(m1.pt + 1) = 2;
+	*(m1.pt + 2) = 0;
+	*(m1.pt + m1.columns) = 4;
+	*(m1.pt + m1.columns + 1) = 3;
+	*(m1.pt + m1.columns + 2) = -1;
+
+	*(m2.pt) = 5;
+	*(m2.pt + 1) = 1;
+	*(m2.pt + m2.columns) = 2;
+	*(m2.pt + m2.columns + 1) = 3;
+	*(m2.pt + 2*m2.columns) = 3;
+	*(m2.pt + 2*m2.columns + 1) = 4;
+
+	m3 = mult_matrix(m1, m2);
+
+	for (int i = 0; i < m3.rows; i++)
 	{
-		for (int j = 0; j < m.columns; j++)
-			printf("%d ",*(m.pt + i*m.columns + j));
+		for (int j = 0; j < m3.columns; j++)
+			printf("%d ",*(m3.pt + i*m3.columns + j));
 		printf("\n");
-	}*/
+	}
 	return 0;
-}
+}*/
 
 /*---------------------------------------*/
 
@@ -75,5 +92,25 @@ Matrix transpose_matrix(Matrix A)
 		for(int j = 0; j < B.columns; j++)
 			*(B.pt + i*B.columns + j) = *(A.pt + i + j*B.columns);
 	return B;
+}
+
+/*-------------------------------------*/
+
+//Matrix multiplication
+Matrix mult_matrix(Matrix A, Matrix B)
+{
+	Matrix M = {A.rows, B.columns, (int *)malloc(A.rows * B.columns * sizeof(int))};
+	if (A.columns != B.rows)
+	{
+		printf("ERROR MATRIX SIZE !\n");
+	}
+	else
+	{
+		for (int i = 0; i < A.rows; i++)
+			for (int j = 0; j < B.columns; j++)
+				for (int k = 0; k < A.columns; k++)
+					*(M.pt + i*M.columns + j) += (*(A.pt + i*A.columns + k)) * (*(B.pt + k*B.columns + j)); 
+	}
+	return M;
 }
 

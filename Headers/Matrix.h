@@ -1,4 +1,9 @@
-typedef struct Matrix Matrix;
+typedef struct Matrix
+{
+	int rows;
+	int columns;
+	int *pt;
+}Matrix;
 
 Matrix init_matrix(int rows, int columns);
 Matrix add_matrix(Matrix A, Matrix B);
