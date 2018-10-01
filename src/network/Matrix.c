@@ -1,14 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "./../../Headers/Matrix.h"
+#include "Matrix.h"
 
-/*struct Matrix
-{
-	int rows;
-	int columns;
-	int *pt;
-};*/
 /*
 int main()
 {
@@ -31,7 +25,7 @@ int main()
 	*(m2.pt + 2*m2.columns) = 3;
 	*(m2.pt + 2*m2.columns + 1) = 4;
 
-	m3 = mult_matrix(m1, m2);
+		m3 = mult_matrix(m1, m2);
 
 	for (int i = 0; i < m3.rows; i++)
 	{
