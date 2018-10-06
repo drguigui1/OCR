@@ -5,47 +5,137 @@
 
 #include <math.h>
 
-typedef struct Network
-{
-	int nb_layers;
-	//Matrix *pt_b; // matrix of biases
-	//Matrix *pt_w; // pt of matrix type
-}Network;
+/*------------------------*/
 
+/*typedef struct Network
+{
+	struct StoreMatrix*** pt_weights;
+	struct StoreMatrix*** pt_bias;
+	struct StoreMatrix*** pt_outputs;
+}Network;*/
+
+
+typedef struct StoreMatrix
+{
+	struct Matrix* matrices;
+}StoreMatrix;
+
+
+//constructeur
+
+StoreMatrix init_ListMatrix(int nb_matrix)
+{
+	StoreMatrix l_matrix = {malloc(sizeof(struct Matrix) * nb_matrix)};
+	return l_matrix;
+}
+
+/*-------------------------*/
 
 //functions
-Network init_all(int *pt); //pt on the list of number layers
+/*-------------------------*/
+
+void init_all(StoreMatrix Weights, StoreMatrix Bias, Matrix sizes, int length);
+void feedforward(StoreMatrix Weights, StoreMatrix Bias, StoreMatrix Outputs, Matrix sizes, int length);
 double sigmoid(double a);
 double sigmoidprime(double b);
-//
+
+/*-------------------------*/
 
 int main(void)
 {
-	Matrix M;
-	M = init_matrix(3,3);
-	for (int i = 0; i < M.rows; i++)
+	//init sizes = [2,3,2]
+	Matrix sizes = init_matrix(1, 3);
+	*(sizes.pt) = 2;
+	*(sizes.pt + 1) = 3;
+        *(sizes.pt + 2) = 2;
+
+	int length = sizeof(sizes)/sizeof(int);
+
+	StoreMatrix Weights = init_ListMatrix(length-1);	
+	StoreMatrix Bias = init_ListMatrix(length-1);
+	StoreMatrix Outputs = init_ListMatrix(length);
+
+	//declare Input
+	*(Outputs.matrices) = init_matrix(2,1);
+
+	init_all(Weights, Bias, sizes, length);
+	feedforward(Weights, Bias, Outputs, sizes, length);	
+	//Weights
+	printf("Weights\n");
+	for (int i = 0; i < (length-1); i++)
 	{
-		for (int j = 0; j < M.columns; j++)
-                	printf("%d", *(M.pt + i*M.columns + j));
+		print_matrix(*(Weights.matrices + i));
+		printf("\n");	
+	}
+	
+	//biases
+	printf("Biases\n");
+	for (int j = 0; j < (length-1); j++)
+	{
+		print_matrix(*(Bias.matrices + j));
+		printf("\n");
+	}
+
+	//Outputs
+	printf("Outputs\n");
+	for (int k = 0; k < length; k++)
+	{
+		print_matrix(*(Outputs.matrices + k));
 		printf("\n");
 	}
 	return 0;
 }
 
 
+
 /*----------------------------*/
 
-/*
-//don't forget to declare the list sizes
-Network init_all(int *p, int size) //pt of th list of number layer
+
+/*----------functions for the network--------------*/
+
+void init_all(StoreMatrix Weights, StoreMatrix Bias, Matrix sizes, int length)
 {
-	Network net = {size, init_matrix()};
 	
+	//creat three struct of matrix 
+	//first for Weights
+	for (int i = 0; i < (length-1); i++)
+		*(Weights.matrices + i) = init_matrix(*(sizes.pt + i+1),*(sizes.pt + i));
 
-	//init weights/biases/sizes
-	//return Network object
-}*/
+	//second for Bias
+	for (int j = 0; j < (length-1); j++)
+		*(Bias.matrices + j) = init_matrix(*(sizes.pt + j+1),1);
 
+}
+
+/*------------------------*/
+
+void feedforward(StoreMatrix Weights, StoreMatrix Bias, StoreMatrix Outputs, Matrix sizes, int length)
+{
+	//first Matrix of Outputs : the input of the network
+	
+	for (int i = 0; i < length-1; i++) //parcours du reseau
+	{
+		Matrix W = *(Weights.matrices + i);
+		Matrix O = *(Outputs.matrices + i);
+		Matrix B = *(Bias.matrices + i);
+		Matrix tab = init_matrix(W.rows, 1);
+		for (int j = 0; j < W.rows; j++) //parcours d'une couche
+		{
+			int nb = 0;
+			for (int k = 0; k < W.columns; k++)//parours de weights d'un neurone
+			{
+				nb += *(W.pt + j*W.columns + k) * *(O.pt + k);
+			}
+			nb += *(B.pt + j);
+			nb = sigmoid(nb);
+			*(tab.pt + j) = nb;
+		}
+		*(Outputs.matrices + i + 1) = tab;
+	}
+
+}
+
+/*----------Math functions--------------*/
 
 //sigmoid
 double sigmoid(double a)
