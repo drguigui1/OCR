@@ -83,9 +83,16 @@ int main(void)
 		print_matrix(*(Outputs.matrices + k));
 		printf("\n");
 	}
+	printf("|----------------------|\n");
+
+	//double b = 0.22;
+	//mult_by_doubl(sizes, b);
+	//apply_func(sizes, sigmoid);
+	//print_matrix(sizes);
+	
+
 	return 0;
 }
-
 
 
 /*----------------------------*/
@@ -119,21 +126,15 @@ void feedforward(StoreMatrix Weights, StoreMatrix Bias, StoreMatrix Outputs, Mat
 		Matrix O = *(Outputs.matrices + i);
 		Matrix B = *(Bias.matrices + i);
 		Matrix tab = init_matrix(W.rows, 1);
-		for (int j = 0; j < W.rows; j++) //parcours d'une couche
-		{
-			int nb = 0;
-			for (int k = 0; k < W.columns; k++)//parours de weights d'un neurone
-			{
-				nb += *(W.pt + j*W.columns + k) * *(O.pt + k);
-			}
-			nb += *(B.pt + j);
-			nb = sigmoid(nb);
-			*(tab.pt + j) = nb;
-		}
+
+		tab = add_matrix(mult_matrix(W, O), B);
+		apply_func(tab, sigmoid);
 		*(Outputs.matrices + i + 1) = tab;
 	}
 
 }
+
+//int g (int (*f)(char))
 
 /*----------Math functions--------------*/
 

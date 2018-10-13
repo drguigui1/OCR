@@ -8,7 +8,7 @@
 //Matrix initialization
 Matrix init_matrix(int rows, int columns)
 {
-	Matrix M = {rows,columns, malloc(rows * columns * sizeof(int))};	
+	Matrix M = {rows,columns, malloc(rows * columns * sizeof(double))};	
 
 	//init random generator
 	srand(time(NULL));
@@ -28,7 +28,7 @@ Matrix init_matrix(int rows, int columns)
 //matrix addition
 Matrix add_matrix(Matrix A, Matrix B)
 {
-	Matrix M = {A.rows,A.columns, malloc(A.rows * A.columns * sizeof(int))};
+	Matrix M = {A.rows,A.columns, malloc(A.rows * A.columns * sizeof(double))};
 	for (int i = 0; i < M.rows; i++)
 		for(int j = 0; j < M.columns; j++)
 			*(M.pt + i*M.columns + j) = *(A.pt + i*M.columns + j) + *(B.pt + i*M.columns + j);
@@ -41,7 +41,7 @@ Matrix add_matrix(Matrix A, Matrix B)
 Matrix hadamar_product(Matrix A, Matrix B)
 {
 
-	Matrix M = {A.rows,A.columns, malloc(A.rows * A.columns * sizeof(int))};
+	Matrix M = {A.rows,A.columns, malloc(A.rows * A.columns * sizeof(double))};
 	for (int i = 0; i < M.rows; i++)
 		for(int j = 0; j < M.columns; j++)
 			*(M.pt + i*M.columns + j) = *(A.pt + i*M.columns + j) * *(B.pt + i*M.columns + j);
@@ -53,7 +53,7 @@ Matrix hadamar_product(Matrix A, Matrix B)
 //Matrix transpose
 Matrix transpose_matrix(Matrix A)
 {
-	Matrix B = {A.columns, A.rows, malloc(A.rows * A.columns * sizeof(int))};
+	Matrix B = {A.columns, A.rows, malloc(A.rows * A.columns * sizeof(double))};
 	for (int i = 0; i < B.rows; i++)
 		for(int j = 0; j < B.columns; j++)
 			*(B.pt + i*B.columns + j) = *(A.pt + i + j*B.columns);
@@ -65,7 +65,7 @@ Matrix transpose_matrix(Matrix A)
 //Matrix multiplication
 Matrix mult_matrix(Matrix A, Matrix B)
 {
-	Matrix M = {A.rows, B.columns, malloc(A.rows * B.columns * sizeof(int))};
+	Matrix M = {A.rows, B.columns, malloc(A.rows * B.columns * sizeof(double))};
 	if (A.columns != B.rows)
 	{
 		printf("ERROR MATRIX SIZE !\n");
@@ -82,13 +82,39 @@ Matrix mult_matrix(Matrix A, Matrix B)
 
 /*-------------------------------------*/
 
+//apply a function to a Matrix
+void apply_func(Matrix A, double (*sig)(double))
+{
+	for (int i = 0; i < A.rows; i++)
+	{
+		for (int j = 0; j < A.columns; j++)
+			*(A.pt + i*A.columns + j) = sig(*(A.pt + i*A.columns + j));
+	
+	}
+}
+
+/*-------------------------------------*/
+
+//multiply by a double
+void mult_by_doubl(Matrix A, double b)
+{
+	for (int i = 0; i < A.rows; i++)
+	{
+		for (int j = 0; j < A.columns; j++)
+			*(A.pt + i*A.columns + j) = *(A.pt + i*A.columns + j) * b;
+	
+	}
+}
+
+/*-------------------------------------*/
+
 //print Matrix
 void print_matrix(Matrix A)
 {
 	for (int i = 0; i < A.rows; i++)
 	{
 		for (int j = 0; j < A.columns; j++)
-			printf("%d ", *(A.pt + i*A.columns + j));
+			printf("%f ", *(A.pt + i*A.columns + j));
 		printf("\n");
 	}
 }
