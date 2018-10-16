@@ -3,6 +3,7 @@
 #include <time.h> 
 
 #include "Matrix.h"
+#include "MathForOcr.h"
 
 
 //Matrix initialization
@@ -10,15 +11,13 @@ Matrix init_matrix(int rows, int columns)
 {
 	Matrix M = {rows,columns, malloc(rows * columns * sizeof(double))};	
 
-	//init random generator
-	srand(time(NULL));
-	//
+	srand (time (NULL));
 	//init
 	for (int i = 0; i < rows; i++)
 		for(int j = 0; j < columns; j++)
 		{
-			int r = rand() % 3;
-			*(M.pt + i*columns + j) = r; //replace with Gaussian distribution
+			double r = generate_random(0, 1);
+			*(M.pt + i*columns + j) = r;
 		}
 	return M;
 }
@@ -29,9 +28,16 @@ Matrix init_matrix(int rows, int columns)
 Matrix add_matrix(Matrix A, Matrix B)
 {
 	Matrix M = {A.rows,A.columns, malloc(A.rows * A.columns * sizeof(double))};
-	for (int i = 0; i < M.rows; i++)
-		for(int j = 0; j < M.columns; j++)
-			*(M.pt + i*M.columns + j) = *(A.pt + i*M.columns + j) + *(B.pt + i*M.columns + j);
+	if (A.rows != B.rows || A.columns != B.columns)
+	{
+		printf("ERROR of size for addition !");
+	}
+	else
+	{	
+		for (int i = 0; i < M.rows; i++)
+			for(int j = 0; j < M.columns; j++)
+				*(M.pt + i*M.columns + j) = *(A.pt + i*M.columns + j) + *(B.pt + i*M.columns + j);
+	}
 	return M;
 }
 
@@ -40,11 +46,17 @@ Matrix add_matrix(Matrix A, Matrix B)
 //Hadamar product
 Matrix hadamar_product(Matrix A, Matrix B)
 {
-
 	Matrix M = {A.rows,A.columns, malloc(A.rows * A.columns * sizeof(double))};
-	for (int i = 0; i < M.rows; i++)
-		for(int j = 0; j < M.columns; j++)
-			*(M.pt + i*M.columns + j) = *(A.pt + i*M.columns + j) * *(B.pt + i*M.columns + j);
+	if (A.rows != B.columns || A.columns != B.columns)
+	{
+		printf("ERROR of size for hadamar !");
+	}
+	else
+	{
+		for (int i = 0; i < M.rows; i++)
+			for(int j = 0; j < M.columns; j++)
+				*(M.pt + i*M.columns + j) = *(A.pt + i*M.columns + j) * *(B.pt + i*M.columns + j);
+	}
 	return M;
 }
 
@@ -68,7 +80,7 @@ Matrix mult_matrix(Matrix A, Matrix B)
 	Matrix M = {A.rows, B.columns, malloc(A.rows * B.columns * sizeof(double))};
 	if (A.columns != B.rows)
 	{
-		printf("ERROR MATRIX SIZE !\n");
+		printf("ERROR MATRIX SIZE for MULT!\n");
 	}
 	else
 	{
