@@ -47,7 +47,7 @@ Matrix add_matrix(Matrix A, Matrix B)
 Matrix hadamar_product(Matrix A, Matrix B)
 {
 	Matrix M = {A.rows,A.columns, malloc(A.rows * A.columns * sizeof(double))};
-	if (A.rows != B.columns || A.columns != B.columns)
+	if (A.rows != B.rows || A.columns != B.columns)
 	{
 		printf("ERROR of size for hadamar !");
 	}
