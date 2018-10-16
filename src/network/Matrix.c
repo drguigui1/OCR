@@ -68,7 +68,7 @@ Matrix transpose_matrix(Matrix A)
 	Matrix B = {A.columns, A.rows, malloc(A.rows * A.columns * sizeof(double))};
 	for (int i = 0; i < B.rows; i++)
 		for(int j = 0; j < B.columns; j++)
-			*(B.pt + i*B.columns + j) = *(A.pt + i + j*B.columns);
+			*(B.pt + i*B.columns + j) = *(A.pt + j*B.rows + i);
 	return B;
 }
 
@@ -130,5 +130,18 @@ void print_matrix(Matrix A)
 		printf("\n");
 	}
 }
+
+//copy Matrix
+Matrix copy_matrix(Matrix A)
+{
+	Matrix B = {A.rows, A.columns, malloc(A.rows*A.columns*sizeof(double))};
+	for (int i = 0; i < A.rows; i++)
+		for (int j = 0; j < A.columns; j++)
+			*(B.pt + i*B.columns + j) = *(A.pt + i*A.columns + j);
+
+	return B;
+}
+
+
 
 

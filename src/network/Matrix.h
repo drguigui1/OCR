@@ -16,5 +16,6 @@ Matrix mult_matrix(Matrix A, Matrix B);
 void apply_func(Matrix A, double (*sig) (double));
 void mult_by_doubl(Matrix A, double b);
 void print_matrix(Matrix A);
+Matrix copy_matrix(Matrix A);
 
 #endif

@@ -76,17 +76,18 @@ int main(void)
 	*(net.pt_wbo + 2) = Outputs;
 
 	//target
-	Matrix T = init_matrix(1,1);
-	*(I.pt) = 1;
-	*(I.pt + 1) = 0.5;
+	Matrix T = init_matrix(2,1);
+	*(T.pt) = 1;
+	*(T.pt + 1) = 0.5;
 
+	//feedforward
 	feedforward(net, length);	
-
+	//print
 	print_network(net, length);
-
+	//backpropagation
 	Matrix Error = backprop_on_last(net, T, length);
 	backprop_on_hidden(net, Error, length);
-	
+	//print
 	print_network(net, length);	
 
 	return 0;
@@ -150,14 +151,14 @@ void feedforward(Network net, int length)
 //call this function with a copy of Output
 Matrix error_last_layer(Matrix Target, Matrix Output)
 {
-	mult_by_doubl(Output, -1);
+	mult_by_doubl(Output, -1.0);
 	return add_matrix(Target, Output);
 }
 
 //Error : error of the l+1 layer
 Matrix error_hidden(Matrix Weight, Matrix Error)
 {
-	Matrix A = init_matrix(Weight.columns, Error.columns);
+	Matrix A = init_matrix(Weight.columns, Weight.rows);
 	A = transpose_matrix(Weight);
 	return mult_matrix(A, Error);
 }
@@ -169,11 +170,9 @@ Matrix error_hidden(Matrix Weight, Matrix Error)
 //call this function with copy of Output
 Matrix SGD(Matrix Output, Matrix Error, double lr)
 {
-	Matrix A = init_matrix(Output.rows, 1);
 	apply_func(Output, sigmoidprime);
 	mult_by_doubl(Error, lr);
-	A = hadamar_product(Output, Error);
-	return A;
+	return hadamar_product(Output, Error);
 } //apply it on bias
 
 /*--------------------------------*/
@@ -182,10 +181,9 @@ Matrix SGD(Matrix Output, Matrix Error, double lr)
 //call this function with copy of Output_l_1
 Matrix delta(Matrix Sgd, Matrix Output_l_1)
 {
-	Matrix B = init_matrix(Sgd.rows, Output_l_1.rows);
-	Output_l_1 = transpose_matrix(Output_l_1);
-	B = mult_matrix(Sgd, Output_l_1);
-	return B;
+	Matrix B = init_matrix(Output_l_1.columns, Output_l_1.rows);
+	B = transpose_matrix(Output_l_1);
+	return mult_matrix(Sgd, B);
 } //apply it on weights*/
 
 /*--------------------------------*/
@@ -199,22 +197,21 @@ Matrix backprop_on_last(Network net, Matrix Target, int length)
 	StoreMatrix Outputs = *(net.pt_wbo + 2);
 
 	//store useful matrix
-	Matrix O = *(Outputs.matrices + length-1);
-	Matrix O_l_1 = *(Outputs.matrices + length-2);
-	Matrix W = *(Weights.matrices + length-2);
-	Matrix B = *(Bias.matrices + length-2);
+	Matrix O = copy_matrix(*(Outputs.matrices + length-2));
+	Matrix O_l_1 = copy_matrix(*(Outputs.matrices + length-3));
+	Matrix W = *(Weights.matrices + length-3);
+	Matrix B = *(Bias.matrices + length-3);
 
 	Matrix Error = error_last_layer(Target, O); //error
-	printf("\n");
 	Matrix Sgd = SGD(O, Error, 0.2);//learning rate error
-	printf("\n");
 	Matrix Delt = delta(Sgd, O_l_1);
 	//weights update
 	W = add_matrix(W, Delt);
-	*(Weights.matrices + length-2) = W;
+	*(Weights.matrices + length-3) = W;
 	//bias update
 	B = add_matrix(B, Sgd);
-	*(Bias.matrices + length-2) = B;
+
+	*(Bias.matrices + length-3) = B;
 
 	*(net.pt_wbo) = Weights;
 	*(net.pt_wbo +1) = Bias;
@@ -232,22 +229,29 @@ void backprop_on_hidden(Network net, Matrix Errorlast, int length)
 
 	Matrix Error = Errorlast;
 
-	for (int i = length - 2; i > 0; i--)
+	for (int i = length - 3; i > 0; i--)
 	{
 		//store matrix
-		Matrix O = *(Outputs.matrices + i);
-	        Matrix O_l_1 = *(Outputs.matrices + i-1);
+		Matrix O = copy_matrix(*(Outputs.matrices + i));
+	        Matrix O_l_1 = copy_matrix(*(Outputs.matrices + i-1));
 		Matrix Wl1 = *(Weights.matrices + i);
 		Matrix W = *(Weights.matrices + i-1);
 		Matrix B = *(Bias.matrices + i-1);
 
 		Error = error_hidden(Wl1, Error);
 		Matrix Sgd = SGD(O, Error, 0.2);
+
 		Matrix Delt = delta(Sgd, O_l_1);
 		//updare weights/bias
 		W = add_matrix(W, Delt);
 		B = add_matrix(B, Sgd);
 		
+		/*printf("\n|-------|\n");
+		print_matrix(W);
+		printf("\n|-------|\n");
+		print_matrix(B);
+		printf("\n|-------|\n");*/
+
 		*(Weights.matrices + i-1) = W;
 		*(Bias.matrices + i-1) = B;
 	}
