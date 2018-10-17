@@ -3,33 +3,18 @@
 
 #include "Matrix.h"
 #include "MathForOcr.h"
-
+#include "Network.h"
 
 /*------------------------*/
 
-//type list Matrix
-typedef struct StoreMatrix
-{
-	struct Matrix* matrices;
-}StoreMatrix;
-
 
 //constructeur
-StoreMatrix init_ListMatrix(int nb_matrix)
+StoreMatrix init_StoreMatrix(int nb_matrix)
 {
-	StoreMatrix l_matrix = {malloc(sizeof(struct Matrix) * nb_matrix)};
+	StoreMatrix l_matrix = {malloc(sizeof(struct Matrix) * nb_matrix), nb_matrix};
 	return l_matrix;
 }
 
-
-//type liste liste matrix
-typedef struct Network
-{
-	struct StoreMatrix* pt_wbo; 
-	//pt + 0 -> weights
-	//pt + 1 -> bias
-	//pt + 2 -> outputs
-}Network;
 
 //constructor
 Network init_network()
@@ -43,59 +28,6 @@ Network init_network()
 //functions
 /*-------------------------*/
 
-Network init_all(Matrix sizes, int length);
-void feedforward(Network net, int length);
-void print_network(Network net, int length);
-Matrix backprop_on_last(Network net, Matrix Target, int length);
-void backprop_on_hidden(Network net, Matrix ErrorLast, int length);
-
-/*-------------------------*/
-
-int main(void)
-{
-	
-	//init sizes = [2,3,2]
-	Matrix sizes = init_matrix(1, 3);
-	*(sizes.pt) = 2;
-	*(sizes.pt + 1) = 3;
-        *(sizes.pt + 2) = 2;
-
-	/////////////////////////
-	
-	int length = sizeof(sizes)/sizeof(int);
-
-	Network net = init_all(sizes, length);
-
-	StoreMatrix Outputs = *(net.pt_wbo + 2);	
-
-	//declare Input
-	Matrix I = init_matrix(2,1);
-	*(I.pt) = 1;
-	*(I.pt + 1) = 1;
-	*(Outputs.matrices) = I;
-	*(net.pt_wbo + 2) = Outputs;
-
-	//target
-	Matrix T = init_matrix(2,1);
-	*(T.pt) = 1;
-	*(T.pt + 1) = 0.5;
-
-	//feedforward
-	feedforward(net, length);	
-	//print
-	print_network(net, length);
-	//backpropagation
-	Matrix Error = backprop_on_last(net, T, length);
-	backprop_on_hidden(net, Error, length);
-	//print
-	print_network(net, length);	
-
-	return 0;
-}
-
-
-/*----------------------------*/
-
 
 /*----------functions for the network--------------*/
 
@@ -103,9 +35,12 @@ Network init_all(Matrix sizes, int length)
 {
 	Network net = init_network();
 
-	StoreMatrix Weights = init_ListMatrix(length-1);	
-	StoreMatrix Bias = init_ListMatrix(length-1);
-	StoreMatrix Outputs = init_ListMatrix(length);
+	StoreMatrix Weights = init_StoreMatrix
+(length-1);	
+	StoreMatrix Bias = init_StoreMatrix
+(length-1);
+	StoreMatrix Outputs = init_StoreMatrix
+(length);
 
 	
 	//first for Weights
@@ -233,7 +168,7 @@ void backprop_on_hidden(Network net, Matrix Errorlast, int length)
 	{
 		//store matrix
 		Matrix O = copy_matrix(*(Outputs.matrices + i));
-	        Matrix O_l_1 = copy_matrix(*(Outputs.matrices + i-1));
+	    Matrix O_l_1 = copy_matrix(*(Outputs.matrices + i-1));
 		Matrix Wl1 = *(Weights.matrices + i);
 		Matrix W = *(Weights.matrices + i-1);
 		Matrix B = *(Bias.matrices + i-1);
