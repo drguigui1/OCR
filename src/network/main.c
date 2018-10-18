@@ -7,6 +7,9 @@
 #include "Network.h"
 #include "save_and_load.h"
 
+
+int random(int r);
+
 int main()
 {
 	Matrix xor1 = init_matrix(2,1); 
@@ -16,10 +19,13 @@ int main()
 
 	*(xor1.pt) = 0;
 	*(xor1.pt+1) = 0;
+
 	*(xor2.pt) = 0;
 	*(xor2.pt+1) = 1;
+
 	*(xor3.pt) = 1;
 	*(xor3.pt+1) = 0;
+
 	*(xor4.pt) = 1;
 	*(xor4.pt+1) = 1;
 
@@ -46,11 +52,11 @@ int main()
 	*(LABEL.matrices+3) = label4;
 
 	
-	//init sizes = [2,3,2]
+	//init sizes = [2,3,1]
 	Matrix sizes = init_matrix(1, 3);
 	*(sizes.pt) = 2;
 	*(sizes.pt + 1) = 3;
-    *(sizes.pt + 3) = 1;
+    	*(sizes.pt + 2) = 1;
 
 
 	/////////////////////////
@@ -60,31 +66,78 @@ int main()
 	Network net = init_all(sizes, length);
 
 	StoreMatrix Outputs = *(net.pt_wbo + 2);	
-	Matrix Input = init_matrix(2,1);
 
-	srand(time(NULL));
-	for (int i = 0; i < 5000; ++i)
+	//srand(time(NULL));
+	for (int k = 0; k < 80000; k++)	
 	{
-		printf("%d\n", i);
-		int n = rand() % 4;
-		Matrix xor = init_matrix(2,1); 
-		xor = *(XOR.matrices+n);
-		*(Input.pt) = *(xor.pt);
-		*(Input.pt+1) = *(xor.pt+1);		
+		//n = random(4);
+		printf("%d\n", k);
+		printf("<><><><><><><><><><>");
+		printf("\nrandom : %d", (k%4));
+		Matrix Input = *(XOR.matrices+k%4);
+		printf("\n XOR \n");
+		print_matrix(Input);
+
 		*(Outputs.matrices) = Input;
 		//feedforward
 		feedforward(net, length);	
 		//print
-		//print_network(net, length);
+		printf("\nAFTER FEEDFORWARD\n");
+		print_network(net, length);
 
 		//backpropagation
-		Matrix Error = backprop_on_last(net, *(LABEL.matrices + n), length);
+		Matrix Error = backprop_on_last(net, *(LABEL.matrices + k%4), length);
 		backprop_on_hidden(net, Error, length);
 		//print
-		//print_network(net, length);	
+		printf("\nAFTER BACKPROP\n");
+		print_network(net, length);	
+	}
+	
+	//test the network (after training)
+	int out = 0;
+	while (!out)
+	{
+
+		double user_entry1 = 0;
+		double user_entry2 = 0;
+		double rien;
+
+		printf("\n x1 : ");
+		rien = scanf("%lf", &user_entry1);
+		printf("%lf\n", user_entry1);
+
+		printf("\n x2 : ");
+		rien = scanf("%lf", &user_entry2);
+		printf("%lf\n", user_entry2);
+
+		if (rien == 0)
+		{
+			printf("ERROR SCANF !!!!");
+		}
+
+		Matrix Input = init_matrix(2, 1);		
+		*(Input.pt) = user_entry1;
+		*(Input.pt + 1) = user_entry2; 
+
+		StoreMatrix O = *(net.pt_wbo + 2);
+		*(O.matrices) = Input;
+		*(net.pt_wbo + 2) = O;
+		
+		feedforward(net, length);
+		Outputs = *(net.pt_wbo + 2);
+		printf("|-----------|\n");
+		print_network(net, length);
 	}
 	
 	//SaveData(Weights, Outputs);
 	
 	return 0;
 }
+
+/*int random(int range)
+{
+	return rand() % range;
+}*/
+
+
+
