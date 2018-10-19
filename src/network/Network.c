@@ -19,7 +19,7 @@ StoreMatrix init_StoreMatrix(int nb_matrix)
 //constructor
 Network init_network()
 {
-	Network net = {malloc(sizeof(struct StoreMatrix) * 3)};
+	Network net = {malloc(sizeof(struct StoreMatrix) * 4)};
 	return net;
 }
 
@@ -35,13 +35,10 @@ Network init_all(Matrix sizes, int length)
 {
 	Network net = init_network();
 
-	StoreMatrix Weights = init_StoreMatrix
-(length-1);	
-	StoreMatrix Bias = init_StoreMatrix
-(length-1);
-	StoreMatrix Outputs = init_StoreMatrix
-(length);
-
+	StoreMatrix Weights = init_StoreMatrix(length-1);	
+	StoreMatrix Bias = init_StoreMatrix(length-1);
+	StoreMatrix Outputs = init_StoreMatrix(length);
+	StoreMatrix Zs = init_StoreMatrix(length-1);
 	
 	//first for Weights
 	for (int i = 0; i < (length-1); i++)
@@ -51,9 +48,13 @@ Network init_all(Matrix sizes, int length)
 	for (int j = 0; j < (length-1); j++)
 		*(Bias.matrices + j) = init_matrix(*(sizes.pt + j+1),1);
 
+	//for (int k = 0; k < (length-1), k++)
+		//*(Zs.matrices + k) = init_matrix(*());
+
 	*(net.pt_wbo) = Weights;
 	*(net.pt_wbo + 1) = Bias;
 	*(net.pt_wbo + 2) = Outputs;
+	*(net.pt_wbo + 3) = Zs;
 	return net;
 }
 
@@ -65,6 +66,7 @@ void feedforward(Network net, int length)
 	StoreMatrix Weights = *(net.pt_wbo);
 	StoreMatrix Bias = *(net.pt_wbo + 1);
 	StoreMatrix Outputs = *(net.pt_wbo + 2);
+	//StoreMatrix Zs = *(net.pt_wbo + 3);
 
 	for (int i = 0; i < length-1; i++) //parcours du reseau
 	{
@@ -74,10 +76,12 @@ void feedforward(Network net, int length)
 		Matrix tab = init_matrix(W.rows, 1);
 
 		tab = add_matrix(mult_matrix(W, O), B);
+		//*(Zs.matrices + i) = copy_matrix(tab);
 		apply_func(tab, sigmoid);
 		*(Outputs.matrices + i + 1) = tab;
 	}
 	*(net.pt_wbo + 2) = Outputs;
+	//*(net.pt_wbo + 3) = Zs; 
 
 }
 
@@ -86,8 +90,7 @@ void feedforward(Network net, int length)
 //call this function with a copy of Output
 Matrix error_last_layer(Matrix Target, Matrix Output)
 {
-	mult_by_doubl(Output, -1.0);
-	return add_matrix(Target, Output);
+	return sub_matrix(Target, Output);
 }
 
 //Error : error of the l+1 layer
@@ -130,29 +133,35 @@ Matrix backprop_on_last(Network net, Matrix Target, int length)
 	StoreMatrix Weights = *(net.pt_wbo);
 	StoreMatrix Bias = *(net.pt_wbo + 1);
 	StoreMatrix Outputs = *(net.pt_wbo + 2);
+	//StoreMatrix Zs = *(net.pt_wbo + 3);
 
 	//store useful matrix
-	Matrix O = copy_matrix(*(Outputs.matrices + length-2));
-	Matrix O_l_1 = copy_matrix(*(Outputs.matrices + length-3));
-	Matrix W = *(Weights.matrices + length-3);
-	Matrix B = *(Bias.matrices + length-3);
-
+	Matrix O = copy_matrix(*(Outputs.matrices + length-1));
+	Matrix O_l_1 = copy_matrix(*(Outputs.matrices + length-2));
+	Matrix W = *(Weights.matrices + length-2);
+	Matrix B = *(Bias.matrices + length-2);
+	//Matrix Z = copy_matrix(*(Zs.matrices + length-2));
+	
 	Matrix Error = error_last_layer(Target, O); //error
+	printf("\n-----ERROR----\n");
+	print_matrix(Error);
+	printf("--------------\n");
+
 	Matrix Sgd = SGD(O, Error, 0.2);//learning rate error
 	Matrix Delt = delta(Sgd, O_l_1);
 	//weights update
-	//mult_by_doubl(Delt, -1);
-	mult_by_doubl(Sgd, -1);
 	W = add_matrix(W, Delt);
-	*(Weights.matrices + length-3) = W;
+	*(Weights.matrices + length-2) = W;
 	//bias update
-	B = add_matrix(B, Sgd);
+	B = sub_matrix(B, Sgd);
 
-	*(Bias.matrices + length-3) = B;
+	*(Bias.matrices + length-2) = B;
 
 	*(net.pt_wbo) = Weights;
 	*(net.pt_wbo +1) = Bias;
-	
+	*(net.pt_wbo +2) = Outputs;
+	//*(net.pt_wbo +3) = Zs;
+
 	return Error;
 }
 
@@ -163,33 +172,35 @@ void backprop_on_hidden(Network net, Matrix Errorlast, int length)
 	StoreMatrix Weights = *(net.pt_wbo);
 	StoreMatrix Bias = *(net.pt_wbo + 1);
 	StoreMatrix Outputs = *(net.pt_wbo + 2);
+	//StoreMatrix Zs = *(net.pt_wbo + 3);
 
-	Matrix Error = Errorlast;
+	Matrix Error = copy_matrix(Errorlast);
 
-	for (int i = length - 3; i > 0; i--)
+	for (int i = length - 2; i > 0; i--)
 	{
 		//store matrix
 		Matrix O = copy_matrix(*(Outputs.matrices + i));
-	    Matrix O_l_1 = copy_matrix(*(Outputs.matrices + i-1));
-		Matrix Wl1 = *(Weights.matrices + i);
+	    	Matrix O_l_1 = copy_matrix(*(Outputs.matrices + i-1));
+		Matrix Wl1 = copy_matrix(*(Weights.matrices + i));
 		Matrix W = *(Weights.matrices + i-1);
 		Matrix B = *(Bias.matrices + i-1);
+		//Matrix Z = copy_matrix(*(Zs.matrices + i-1));
 
 		Error = error_hidden(Wl1, Error);
 		Matrix Sgd = SGD(O, Error, 0.2);
 
 		Matrix Delt = delta(Sgd, O_l_1);
 		//updare weights/bias
-		//mult_by_doubl(Delt, -1);
-		mult_by_doubl(Sgd, -1);
 		W = add_matrix(W, Delt);
-		B = add_matrix(B, Sgd);
+		B = sub_matrix(B, Sgd);
 		
 		*(Weights.matrices + i-1) = W;
 		*(Bias.matrices + i-1) = B;
 	}
 	*(net.pt_wbo) = Weights;
 	*(net.pt_wbo + 1) = Bias;
+	*(net.pt_wbo + 2) = Outputs;
+	//*(net.pt_wbo + 3) = Zs;
 }
 
 /*-------------------------------------------*/
@@ -228,3 +239,4 @@ void print_network(Network net, int length)
 	
 
 }
+

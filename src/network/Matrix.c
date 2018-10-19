@@ -41,6 +41,23 @@ Matrix add_matrix(Matrix A, Matrix B)
 	return M;
 }
 
+//sub matrix
+Matrix sub_matrix(Matrix A, Matrix B)
+{
+	Matrix M = {A.rows,A.columns, malloc(A.rows * A.columns * sizeof(double))};
+	if (A.rows != B.rows || A.columns != B.columns)
+	{
+		printf("ERROR of size for sub !");
+	}
+	else
+	{	
+		for (int i = 0; i < M.rows; i++)
+			for(int j = 0; j < M.columns; j++)
+				*(M.pt + i*M.columns + j) = *(A.pt + i*M.columns + j) - *(B.pt + i*M.columns + j);
+	}
+	return M;
+}
+
 /*-------------------------------------*/
 
 //Hadamar product
