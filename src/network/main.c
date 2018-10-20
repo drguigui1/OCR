@@ -70,10 +70,10 @@ int main()
 	StoreMatrix Outputs = *(net.pt_wbo + 2);	
 
 	//srand(time(NULL));
-	for (int k = 0; k < 4000; k++)	
+	for (int k = 0; k < 200000; k++)	
 	{
-		printf("\nrandom : %d\n", k%4);
-		Matrix Input = *(XOR.matrices+k%4);
+		printf("\nrandom : %d\n", 0);
+		Matrix Input = *(XOR.matrices + k%4);
 		print_matrix(Input);
 
 		*(Outputs.matrices) = Input;
@@ -82,11 +82,16 @@ int main()
 		feedforward(net, length);	
 		//print
 
+		printf("\nFEEDFORWARD !\n");
 		print_network(net, length);
 		//backpropagation
-		Matrix Error = backprop_on_last(net, *(LABEL.matrices), length);
+		printf("\nTarget\n");
+		print_matrix(*(LABEL.matrices + k%4));
+		printf("\n-------\n");
+		Matrix Error = backprop_on_last(net, *(LABEL.matrices + k%4), length);
 		backprop_on_hidden(net, Error, length);
 		//print
+		printf("\nBACKPROP !\n");
 		print_network(net, length);
 		//feedforward(net, length);
 		//print_network(net, length);

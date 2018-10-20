@@ -153,7 +153,7 @@ Matrix backprop_on_last(Network net, Matrix Target, int length)
 	W = add_matrix(W, Delt);
 	*(Weights.matrices + length-2) = W;
 	//bias update
-	B = sub_matrix(B, Sgd);
+	B = add_matrix(B, Sgd);
 
 	*(Bias.matrices + length-2) = B;
 
@@ -192,7 +192,7 @@ void backprop_on_hidden(Network net, Matrix Errorlast, int length)
 		Matrix Delt = delta(Sgd, O_l_1);
 		//updare weights/bias
 		W = add_matrix(W, Delt);
-		B = sub_matrix(B, Sgd);
+		B = add_matrix(B, Sgd);
 		
 		*(Weights.matrices + i-1) = W;
 		*(Bias.matrices + i-1) = B;
