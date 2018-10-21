@@ -5,13 +5,12 @@
 #include "Matrix.h"
 #include "MathForOcr.h"
 #include "Network.h"
-#include "save_and_load.h"
-
-
-int random(int r);
+#include "SaveAndLoad.h"
+#include "ImageTraining.h"
 
 int main()
 {
+	
 	Matrix xor1 = init_matrix(2,1); 
 	Matrix xor2 = init_matrix(2,1); 
 	Matrix xor3 = init_matrix(2,1); 
@@ -70,13 +69,13 @@ int main()
 	StoreMatrix Outputs = *(net.pt_wbo + 2);	
 
 	srand(time(NULL));
-	for (int k = 0; k < 8000; k++)	
+	for (int k = 0; k < 10000; k++)	
 	{
 		int r = rand();
 		r = r%4;
-		printf("\nrandom : %d\n", r);
+		//printf("\nrandom : %d\n", r);
 		Matrix Input = *(XOR.matrices + r);
-		print_matrix(Input);
+		//print_matrix(Input);
 
 		*(Outputs.matrices) = Input;
 		
@@ -84,17 +83,17 @@ int main()
 		feedforward(net, length);	
 		//print
 
-		printf("\nFEEDFORWARD !\n");
-		print_network(net, length);
+		//printf("\nFEEDFORWARD !\n");
+		//print_network(net, length);
 		//backpropagation
-		printf("\nTarget\n");
-		print_matrix(*(LABEL.matrices + r));
-		printf("\n-------\n");
+		//printf("\nTarget\n");
+		//print_matrix(*(LABEL.matrices + r));
+		//printf("\n-------\n");
 		Matrix Error = backprop_on_last(net, *(LABEL.matrices + r), length);
 		backprop_on_hidden(net, Error, length);
 		//print
-		printf("\nBACKPROP !\n");
-		print_network(net, length);
+		//printf("\nBACKPROP !\n");
+		//print_network(net, length);
 		//feedforward(net, length);
 		//print_network(net, length);
 	}
@@ -103,7 +102,7 @@ int main()
 	int out = 0;
 	while (!out)
 	{
-
+		printf("\nEnter 0 or 1 to test XOR : \n");
 		double user_entry1 = 0;
 		double user_entry2 = 0;
 		double rien;
@@ -111,6 +110,9 @@ int main()
 		printf("\n x1 : ");
 		rien = scanf("%lf", &user_entry1);
 		printf("%lf\n", user_entry1);
+
+		if (user_entry1 != 1 && user_entry1 != 0)
+			break;
 
 		printf("\n x2 : ");
 		rien = scanf("%lf", &user_entry2);
@@ -132,18 +134,14 @@ int main()
 		feedforward(net, length);
 		Outputs = *(net.pt_wbo + 2);
 		printf("|-----------|\n");
+		printf("Result : \n");
+		//print_result(net, length);
 		print_network(net, length);
 	}
-	
-	//SaveData(Weights, Outputs);
-	
+
 	return 0;
 }
 
-/*int random(int range)
-{
-	return rand() % range;
-}*/
 
 
 

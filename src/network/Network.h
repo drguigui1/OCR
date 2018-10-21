@@ -1,3 +1,5 @@
+#include "Matrix.h"
+
 #ifndef NETWORK_H
 #define NETWORK_H
 
@@ -26,6 +28,6 @@ void feedforward(Network net, int length);
 void print_network(Network net, int length);
 Matrix backprop_on_last(Network net, Matrix Target, int length);
 void backprop_on_hidden(Network net, Matrix ErrorLast, int length);
-
+//void print_result(Network net, int length);
 
 #endif

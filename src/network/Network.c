@@ -143,9 +143,6 @@ Matrix backprop_on_last(Network net, Matrix Target, int length)
 	//Matrix Z = copy_matrix(*(Zs.matrices + length-2));
 	
 	Matrix Error = error_last_layer(Target, O); //error
-	printf("\n-----ERROR----\n");
-	print_matrix(Error);
-	printf("--------------\n");
 
 	Matrix Sgd = SGD(O, Error, 0.4);//learning rate error
 	Matrix Delt = delta(Sgd, O_l_1);
