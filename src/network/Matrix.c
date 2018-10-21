@@ -11,7 +11,7 @@ Matrix init_matrix(int rows, int columns)
 {
 	Matrix M = {rows,columns, malloc(rows * columns * sizeof(double))};	
 
-	srand (time (NULL));
+	//srand (time (NULL));
 	//init
 	for (int i = 0; i < rows; i++)
 		for(int j = 0; j < columns; j++)

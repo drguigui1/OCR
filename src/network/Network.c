@@ -147,7 +147,7 @@ Matrix backprop_on_last(Network net, Matrix Target, int length)
 	print_matrix(Error);
 	printf("--------------\n");
 
-	Matrix Sgd = SGD(O, Error, 0.2);//learning rate error
+	Matrix Sgd = SGD(O, Error, 0.4);//learning rate error
 	Matrix Delt = delta(Sgd, O_l_1);
 	//weights update
 	W = add_matrix(W, Delt);
@@ -187,7 +187,7 @@ void backprop_on_hidden(Network net, Matrix Errorlast, int length)
 		//Matrix Z = copy_matrix(*(Zs.matrices + i-1));
 
 		Error = error_hidden(Wl1, Error);
-		Matrix Sgd = SGD(O, Error, 0.2);
+		Matrix Sgd = SGD(O, Error, 0.4);
 
 		Matrix Delt = delta(Sgd, O_l_1);
 		//updare weights/bias

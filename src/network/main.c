@@ -69,11 +69,13 @@ int main()
 
 	StoreMatrix Outputs = *(net.pt_wbo + 2);	
 
-	//srand(time(NULL));
-	for (int k = 0; k < 200000; k++)	
+	srand(time(NULL));
+	for (int k = 0; k < 8000; k++)	
 	{
-		printf("\nrandom : %d\n", 0);
-		Matrix Input = *(XOR.matrices + k%4);
+		int r = rand();
+		r = r%4;
+		printf("\nrandom : %d\n", r);
+		Matrix Input = *(XOR.matrices + r);
 		print_matrix(Input);
 
 		*(Outputs.matrices) = Input;
@@ -86,9 +88,9 @@ int main()
 		print_network(net, length);
 		//backpropagation
 		printf("\nTarget\n");
-		print_matrix(*(LABEL.matrices + k%4));
+		print_matrix(*(LABEL.matrices + r));
 		printf("\n-------\n");
-		Matrix Error = backprop_on_last(net, *(LABEL.matrices + k%4), length);
+		Matrix Error = backprop_on_last(net, *(LABEL.matrices + r), length);
 		backprop_on_hidden(net, Error, length);
 		//print
 		printf("\nBACKPROP !\n");
@@ -98,8 +100,8 @@ int main()
 	}
 	
 	//test the network (after training)
-	//int out = 0;
-	/*while (!out)
+	int out = 0;
+	while (!out)
 	{
 
 		double user_entry1 = 0;
@@ -130,10 +132,11 @@ int main()
 		feedforward(net, length);
 		Outputs = *(net.pt_wbo + 2);
 		printf("|-----------|\n");
+		print_network(net, length);
 	}
 	
 	//SaveData(Weights, Outputs);
-	*/
+	
 	return 0;
 }
 
