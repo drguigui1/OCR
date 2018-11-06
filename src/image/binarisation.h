@@ -1,8 +1,8 @@
 #ifndef BINARISATION_H
 #define BINARISATION_H
-#include "tree.h"
-#include "list.h"
-#include "Matrix.h"
+#include "../utils/Matrix.h"
+#include "../utils/list.h"
+#include "../utils/tree.h"
 
 typedef struct Vector2 Vector2;
 struct Vector2

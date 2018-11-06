@@ -3,8 +3,8 @@
 #include <err.h>
 
 #include "SaveAndLoad.h"
-#include "MathForOcr.h"
-#include "Matrix.h"
+#include "../utils/MathForOcr.h"
+#include "../utils/Matrix.h"
 #include "Network.h"
 
 void SaveData(DataType type, StoreMatrix data)
@@ -40,7 +40,7 @@ void SaveData(DataType type, StoreMatrix data)
 		fclose(file);
 	}
 	else 
-		errx(1, "ERROR while opening file in SaveData");
+		errx(1, "ERROR while opening file in SaveData\n");
 }
 
 

@@ -1,7 +1,7 @@
 #include <stdio.h>
-#include "Matrix.h"
-#include "list.h"
-#include "tree.h"
+#include "../utils/Matrix.h"
+#include "../utils/list.h"
+#include "../utils/tree.h"
 
 typedef struct Vector2 Vector2;
 struct Vector2
@@ -20,7 +20,7 @@ struct Vector2
 //flag of the visited cell: -1
 
 
-void neighbours(Matrix array, List *actual, List *next, List *contrast, double base)
+void neighbours(Matrix array,List *actual,List *next,List *contrast,double base)
 {
   double cell = 0;
   
@@ -253,7 +253,7 @@ Tree *binarisation(Matrix array)
 {
   Vector2 zero; zero.x = 0; zero.y = 0;
   Tree *T = init_t();
-  Matrix work_on = copy_Matrix(array); //create new matrix that can be destroyed
+  Matrix work_on = copy_matrix(array); //create new matrix that can be destroyed
 
   
   buildTree(work_on, zero, T);

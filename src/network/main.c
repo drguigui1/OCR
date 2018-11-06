@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <time.h>
 
-#include "Matrix.h"
-#include "MathForOcr.h"
+#include "../utils/Matrix.h"
+#include "../utils/MathForOcr.h"
 #include "Network.h"
 #include "SaveAndLoad.h"
 #include "ImageTraining.h"
