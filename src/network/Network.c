@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "../utils/Matrix.h"
-#include "../utils/MathForOcr.h"
+#include "Matrix.h"
+#include "MathForOcr.h"
 #include "Network.h"
 
 /*------------------------*/
@@ -147,6 +147,9 @@ Matrix backprop_on_last(Network net, Matrix Target, int length)
 	*(net.pt_wbo +1) = Bias;
 	*(net.pt_wbo +2) = Outputs;
 
+	free(O.pt);
+	free(O_l_1.pt);
+
 	return Error;
 }
 
@@ -179,10 +182,16 @@ void backprop_on_hidden(Network net, Matrix Errorlast, int length)
 		
 		*(Weights.matrices + i-1) = W;
 		*(Bias.matrices + i-1) = B;
+
+		free(O.pt);
+		free(O_l_1.pt);
+		free(Wl1.pt);
 	}
 	*(net.pt_wbo) = Weights;
 	*(net.pt_wbo + 1) = Bias;
 	*(net.pt_wbo + 2) = Outputs;
+
+	free(Error.pt);
 }
 
 /*-------------------------------------------*/
@@ -218,7 +227,5 @@ void print_network(Network net, int length)
 		printf("\n");
 	}
 	printf("|----------------------|\n");
-	
-
 }
 

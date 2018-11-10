@@ -3,8 +3,8 @@
 #include <err.h>
 
 #include "SaveAndLoad.h"
-#include "../utils/MathForOcr.h"
-#include "../utils/Matrix.h"
+#include "MathForOcr.h"
+#include "Matrix.h"
 #include "Network.h"
 
 void SaveData(DataType type, StoreMatrix data)
@@ -20,7 +20,7 @@ void SaveData(DataType type, StoreMatrix data)
 	{
 		fputc(data.nb, file);
 
-		for (int i = 0; i < data.nb; ++i)
+		for (int i = 0; i < data.nb; i++)
 		{
 			Matrix matrix_to_save = *(data.matrices + i);
 			int rows = matrix_to_save.rows;	
@@ -29,9 +29,9 @@ void SaveData(DataType type, StoreMatrix data)
 			fputc(rows, file);
 			fputc(columns, file);
 
-			for (int j = 0; j < rows; ++j)
+			for (int j = 0; j < rows; j++)
 			{
-				for (int k = 0; k < columns; ++k)
+				for (int k = 0; k < columns; k++)
 				{
 					fprintf(file, "%lf", *(matrix_to_save.pt + j*columns + k));
 				}
@@ -43,6 +43,13 @@ void SaveData(DataType type, StoreMatrix data)
 		errx(1, "ERROR while opening file in SaveData\n");
 }
 
+void SaveNetwork(Network net)
+{
+	StoreMatrix weights = *(net.pt_wbo);
+	StoreMatrix bias = *(net.pt_wbo + 1);
+	SaveData(Weights, weights);
+	SaveData(Bias, bias);
+}
 
 StoreMatrix LoadData(DataType type)
 {
@@ -72,7 +79,6 @@ StoreMatrix LoadData(DataType type)
 					char* s = malloc(9);
 					s = fgets(s, 9, file);
 					*(m.pt + j*columns + k) = atof(s);
-					fseek(file, 2, SEEK_CUR);
 					free(s);
 				}
 			}
@@ -84,4 +90,14 @@ StoreMatrix LoadData(DataType type)
 	}
 	else 
 		errx(1, "ERROR while opening file in LoadData\n");
+}
+
+Network LoadNetwork()
+{
+	StoreMatrix weights = LoadData(Weights);
+	StoreMatrix bias = LoadData(Bias);
+	Network net = init_network();
+	*(net.pt_wbo) = weights;
+	*(net.pt_wbo) = bias;
+	return net;
 }

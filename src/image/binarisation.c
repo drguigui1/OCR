@@ -1,7 +1,7 @@
 #include <stdio.h>
-#include "../utils/Matrix.h"
-#include "../utils/list.h"
-#include "../utils/tree.h"
+#include "Matrix.h"
+#include "list.h"
+#include "tree.h"
 
 typedef struct Vector2 Vector2;
 struct Vector2

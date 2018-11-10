@@ -1,4 +1,4 @@
-#include "../utils/Matrix.h"
+#include "Matrix.h"
 
 #ifndef NETWORK_H
 #define NETWORK_H

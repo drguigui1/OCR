@@ -2,15 +2,16 @@
 #include <stdlib.h>
 #include <time.h>
 
-#include "../utils/Matrix.h"
-#include "../utils/MathForOcr.h"
+#include "Matrix.h"
+#include "MathForOcr.h"
 #include "Network.h"
 #include "SaveAndLoad.h"
 #include "ImageTraining.h"
+#include "mnist.h"
 
 int main()
 {
-	
+	/*
 	Matrix xor1 = init_matrix(2,1); 
 	Matrix xor2 = init_matrix(2,1); 
 	Matrix xor3 = init_matrix(2,1); 
@@ -33,7 +34,7 @@ int main()
 	*(XOR.matrices+1) = xor2;
 	*(XOR.matrices+2) = xor3;
 	*(XOR.matrices+3) = xor4;
-
+	
 	Matrix label1 = init_matrix(1,1); 
 	Matrix label2 = init_matrix(1,1); 
 	Matrix label3 = init_matrix(1,1); 
@@ -49,7 +50,7 @@ int main()
 	*(LABEL.matrices+1) = label2;
 	*(LABEL.matrices+2) = label3;
 	*(LABEL.matrices+3) = label4;
-
+	
 	
 	//init sizes = [2,3,1]
 	Matrix sizes = init_matrix(1, 3);
@@ -140,6 +141,19 @@ int main()
 	}
 
 	return 0;
+	*/
+
+	//ImageParsing(Train);
+	double a[60000][784] = gettrainimage();
+
+	for (int i = 0; i < 60000; ++i)
+	{
+		for (int j = 0; j < 784; ++j)
+		{
+			printf("%lf ", a[i][j]);
+		}
+		printf("\n");
+	}
 }
 
 
