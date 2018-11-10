@@ -6,8 +6,8 @@
 #include "MathForOcr.h"
 #include "Network.h"
 #include "SaveAndLoad.h"
-#include "ImageTraining.h"
-#include "mnist.h"
+//#include "ImageTraining.h"
+//#include "mnist.h"
 
 int main()
 {
@@ -144,6 +144,7 @@ int main()
 	*/
 
 	//ImageParsing(Train);
+	/*
 	double a[60000][784] = gettrainimage();
 
 	for (int i = 0; i < 60000; ++i)
@@ -153,7 +154,8 @@ int main()
 			printf("%lf ", a[i][j]);
 		}
 		printf("\n");
-	}
+	}*/
+
 }
 
 

@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <time.h> 
 
+
 #include "Matrix.h"
 #include "MathForOcr.h"
 
@@ -171,6 +172,6 @@ Matrix copy_matrix(Matrix A)
 	return B;
 }
 
-
+/*---------------------------------------*/
 
 

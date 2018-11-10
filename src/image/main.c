@@ -1,10 +1,11 @@
 #include <stdio.h>
 #include "binarisation.h"
+#include "convert.h"
 
 int main()
 {
   
-  Matrix array = init_matrix_zero(10,10);
+  /*Matrix array = init_matrix_zero(10,10);
     
   *(array.pt + 2*array.columns + 2) = 5;
   *(array.pt + 1*array.columns + 1) = 1;
@@ -21,5 +22,9 @@ int main()
   print_Tree(binarisation(array) -> root);
   printf("\n");
   
-  return (0);
+  return (0);*/
+
+  Matrix K = img_to_matrix2("0.png")
+  print_matrix(K);
+
 }
