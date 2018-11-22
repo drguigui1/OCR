@@ -16,12 +16,10 @@ StoreMatrix init_StoreMatrix(int nb_matrix);
 typedef struct Network
 {
 	struct StoreMatrix* pt_wbo; 
-	//pt + 0 -> weights
-	//pt + 1 -> bias
-	//pt + 2 -> outputs
+	int length;
 }Network;
 
-Network init_network();
+Network init_network(int length);
 
 Network init_all(Matrix sizes, int length);
 void feedforward(Network net, int length);

@@ -7,9 +7,11 @@
 #include "MathForOcr.h"
 #include "Network.h"
 #include "SaveAndLoad.h"
+#include "ImageTraining.h"
 
 int main()
 {
+	srand(time(NULL));
 	//init sizes = [2,3,1]
 	/*Matrix sizes = init_matrix(1, 3);
 	*(sizes.pt) = 2;
@@ -19,7 +21,10 @@ int main()
 	
 
 	srand(time(NULL));
-	xor(sizes);*/
+	xor(sizes);
+	free(size.pt);
+	*/
+
 
 	return 0;
 

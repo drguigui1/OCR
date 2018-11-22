@@ -17,9 +17,9 @@ StoreMatrix init_StoreMatrix(int nb_matrix)
 
 
 //constructor
-Network init_network()
+Network init_network(int length)
 {
-	Network net = {malloc(sizeof(struct StoreMatrix) * 4)};
+	Network net = {malloc(sizeof(struct StoreMatrix) * 4), length};
 	return net;
 }
 
@@ -33,7 +33,7 @@ Network init_network()
 
 Network init_all(Matrix sizes, int length)
 {
-	Network net = init_network();
+	Network net = init_network(length);
 
 	StoreMatrix Weights = init_StoreMatrix(length-1);	
 	StoreMatrix Bias = init_StoreMatrix(length-1);
