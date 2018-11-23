@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include <time.h>
 
+
+
+
 #include "xor.h"
 #include "Matrix.h"
 #include "MathForOcr.h"
@@ -9,9 +12,11 @@
 #include "SaveAndLoad.h"
 #include "ImageTraining.h"
 
+
 int main()
 {
 	srand(time(NULL));
+	//XOR
 	//init sizes = [2,3,1]
 	/*Matrix sizes = init_matrix(1, 3);
 	*(sizes.pt) = 2;
@@ -25,6 +30,9 @@ int main()
 	free(size.pt);
 	*/
 
+	Network net = CreateNetwork();
+	TrainNetwork();
+	TestNetwork(net);
 
 	return 0;
 

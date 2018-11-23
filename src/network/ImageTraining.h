@@ -9,5 +9,6 @@ void TrainNetwork(Network net, int nb_it);
 void TestNetwork(Network net);
 Network CreateNetwork ();
 int max_M(Matrix M);
+unsigned char convert_to_ascii(int pos);
 
 #endif

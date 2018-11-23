@@ -15,7 +15,7 @@
 Matrix GetImage(char path[], int img_number)
 {
 	char img_name[5];
-	sprintf(img_number, "%d", img_name);
+	sprintf(img_name, "%d", img_number);
 	strcat(img_name, ".png");
 	strcat(path, img_name);
 	Matrix M = img_to_matrix(load_image(path));
@@ -27,7 +27,7 @@ int GetLabel(char path[], int label_number)
 	FILE* file;
 
 	char label_name[5];
-	sprintf(label_number, "%d", &label_name);
+	sprintf(label_name, "%d", label_number);
 	strcat(label_name, ".txt");
 	strcat(path, label_name);
 	file = fopen(path, "r");
@@ -106,8 +106,14 @@ void TestNetwork(Network net)
 		*(Outputs.matrices) = image;
 		
 		feedforward(net, length);
+		int out = max_M(*(Outputs.matrices + 2));
+		unsigned char c_out = convert_to_ascii(out);
 
+		int label = GetLabel(pathlabel, i);
+		unsigned char c_lab = convert_to_ascii(label);
 		
+		printf("RESULT -> %c\n", c_out);
+		printf("LABEL  -> %c\n", c_lab);
 	}
 }
 
@@ -136,6 +142,31 @@ int max_M(Matrix M)
 
     }
     return tmp;
+}
+
+unsigned char convert_to_ascii(int pos)
+{
+	unsigned char a;
+
+	if (0 <= pos && pos <= 9)                                           
+    	a = pos + 48;                                                
+    else if (10 <= pos && pos <= 35)                                      
+    	a = pos + 55;                                                
+    else if (36 <= pos && pos <= 61)                                     
+        a = pos + 61;                                                
+    else if (pos == 62 || pos == 63)                                    
+        a = pos - 29;                                                
+    else if (pos == 64 || pos == 65)                                    
+        a = pos - 24;                                                
+    else if (66 <= pos && pos <= 70)                                      
+    	a = pos - 24;                                                
+    else if (71 <= pos && pos <= 75)                                      
+    	a = pos + 20;
+    else
+    {
+    	errx(1, "ERROR CONVERT TO ASCII");
+    }
+	return a;
 }
 
 

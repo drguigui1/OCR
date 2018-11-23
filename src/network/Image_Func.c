@@ -1,8 +1,10 @@
 #include <err.h>
-#include "SDL/SDL.h"
-#include "SDL/SDL_image.h"
+#include <SDL/SDL.h>
+#include <SDL/SDL_image.h>
 #include "Image_Func.h"
 
+// -> Loading an image from a file
+SDL_Surface* load_image(char *path)
 {
     SDL_Surface *img;
 
