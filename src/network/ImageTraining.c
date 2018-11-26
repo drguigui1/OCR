@@ -14,7 +14,7 @@
 
 Matrix GetImage(char path[], int img_number)
 {
-	char img_name[5];
+	char img_name[6];
 	sprintf(img_name, "%d", img_number);
 	strcat(img_name, ".png");
 	strcat(path, img_name);
@@ -22,11 +22,12 @@ Matrix GetImage(char path[], int img_number)
 	return M;
 }
 
+//good
 int GetLabel(char path[], int label_number)
 {
 	FILE* file;
 
-	char label_name[5];
+	char label_name[10];
 	sprintf(label_name, "%d", label_number);
 	strcat(label_name, ".txt");
 	strcat(path, label_name);
@@ -36,6 +37,7 @@ int GetLabel(char path[], int label_number)
 	{
 		int target;
 		char label = fgetc(file);
+		printf("%c\n", label);
 		
 		if (47 < label && label < 58)
 			target = label - 48;
@@ -61,8 +63,8 @@ int GetLabel(char path[], int label_number)
 
 void TrainNetwork(Network net, int nb_it)
 {
-	char pathimage[] = "../../img_train/";
-	char pathlabel[] = "../../label_train/";
+	char pathimage[30] = "../../img_train/";
+	char pathlabel[30] = "../../label_train/";
 
 	int length = net.length;
 	StoreMatrix Outputs = *(net.pt_wbo + 2);
@@ -126,10 +128,13 @@ Network CreateNetwork()
 
 	Network net = init_all(sizes, 3);
 
+	free(sizes.pt);
+
 	return net; 
 }
 
 
+//good
 int max_M(Matrix M)
 {
     int tmp = 0;
@@ -144,6 +149,7 @@ int max_M(Matrix M)
     return tmp;
 }
 
+//good
 unsigned char convert_to_ascii(int pos)
 {
 	unsigned char a;

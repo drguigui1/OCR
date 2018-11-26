@@ -13,6 +13,17 @@
 #include "ImageTraining.h"
 
 
+void test()
+{
+	/*char path[22] = "../../img_test/";
+	Matrix M = GetImage(path, 2);
+	int tmp = M.columns;
+	M.columns = 1;
+	M.rows *= tmp;
+	print_matrix(M);
+	free(M.pt);*/
+}
+
 int main()
 {
 	srand(time(NULL));
@@ -30,9 +41,10 @@ int main()
 	free(size.pt);
 	*/
 
-	Network net = CreateNetwork();
+	/*Network net = CreateNetwork();
 	TrainNetwork();
-	TestNetwork(net);
+	TestNetwork(net);*/
+	//test();
 
 	return 0;
 
