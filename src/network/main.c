@@ -48,10 +48,10 @@ int main()
 
 	Network net = CreateNetwork();
 	print_network(net, net.length);
-	free(net.pt_wbo);
+	free_network(net);
 
 
-	retur 0;
+	return 0;
 
 }
 

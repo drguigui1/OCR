@@ -47,7 +47,10 @@ Network init_all(Matrix sizes, int length)
 	for (int j = 0; j < (length-1); j++)
 		*(Bias.matrices + j) = init_matrix(*(sizes.pt + j+1),1);
 
-	*(net.pt_wbo) = Weights;
+	for (int k = 0; k < length; k++)
+        *(Outputs.matrices + k) = init_matrix_zero(*(sizes.pt + k),1);
+
+    *(net.pt_wbo) = Weights;
 	*(net.pt_wbo + 1) = Bias;
 	*(net.pt_wbo + 2) = Outputs;
 	return net;
@@ -194,9 +197,7 @@ void backprop_on_hidden(Network net, Matrix Errorlast, int length)
 	free(Error.pt);
 }
 
-/*-------------------------------------------*/
-/*---------------HELPERS---------------------*/
-void print_network(Network net, int length)
+void free_network(Network net)
 {
 	
 	StoreMatrix Weights = *(net.pt_wbo);
@@ -204,13 +205,37 @@ void print_network(Network net, int length)
 	StoreMatrix Outputs = *(net.pt_wbo + 2);	
 
 	//Weights
+	for (int i = 0; i < (net.length-1); i++)
+		free((Weights.matrices + i)->pt);
+	
+	//biases
+	for (int j = 0; j < (net.length-1); j++)
+		free((Bias.matrices + j)->pt);
+
+	//Outputs
+	for (int k = 0; k < net.length; k++)
+		free((Outputs.matrices + k)->pt);
+    
+    free(Weights.matrices);
+    free(Bias.matrices);
+    free(Outputs.matrices);
+    free(net.pt_wbo);
+}
+
+/*-------------------------------------------*/
+/*---------------HELPERS---------------------*/
+void print_network(Network net, int length)
+{
+	
+	StoreMatrix Weights = *(net.pt_wbo);
+        StoreMatrix Bias = *(net.pt_wbo + 1);
+	StoreMatrix Outputs = *(net.pt_wbo + 2);	
+
+	//Weights
 	printf("Weights\n");
 	for (int i = 0; i < (length-1); i++)
 	{
-		//print_matrix(*(Weights.matrices + i));
-		int r = (*(Weights.matrices+i)).rows;
-		int c = (*(Weights.matrices+i)).columns;
-		printf("ROWS ->%d, COLS->%d\n", r, c);
+		print_matrix(*(Weights.matrices + i));
 		printf("\n");	
 	}
 	
@@ -218,10 +243,7 @@ void print_network(Network net, int length)
 	printf("Biases\n");
 	for (int j = 0; j < (length-1); j++)
 	{
-		//print_matrix(*(Bias.matrices + j));
-		int r = (*(Bias.matrices+j)).rows;
-		int c = (*(Bias.matrices+j)).columns;
-		printf("ROWS ->%d, COLS->%d\n", r, c);
+		print_matrix(*(Bias.matrices + j));
 		printf("\n");
 	}
 
@@ -229,10 +251,7 @@ void print_network(Network net, int length)
 	printf("Outputs\n");
 	for (int k = 0; k < length; k++)
 	{
-		//print_matrix(*(Outputs.matrices + k));
-		int r = (*(Outputs.matrices+k)).rows;
-		int c = (*(Outputs.matrices+k)).columns;
-		printf("ROWS ->%d, COLS->%d\n", r, c);
+		print_matrix(*(Outputs.matrices + k));
 		printf("\n");
 	}
 	printf("|----------------------|\n");
