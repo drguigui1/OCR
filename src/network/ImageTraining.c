@@ -15,13 +15,14 @@
 //good
 Matrix GetImage(char path[], int img_number)
 {
-	char img_name[6];
+	char img_name[100] = "";
 	sprintf(img_name, "%d", img_number);
 	strcat(img_name, ".png");
 	strcat(path, img_name);
 	SDL_Surface* img = load_image(path);
 	Matrix M = img_to_matrix(img);
 	SDL_FreeSurface(img);
+	printf("%s\n", img_name);
 	return M;
 }
 
@@ -30,7 +31,7 @@ int GetLabel(char path[], int label_number)
 {
 	FILE* file;
 
-	char label_name[10];
+	char label_name[10] = "";
 	sprintf(label_name, "%d", label_number);
 	strcat(label_name, ".txt");
 	strcat(path, label_name);
@@ -66,15 +67,16 @@ int GetLabel(char path[], int label_number)
 
 void TrainNetwork(Network net, int nb_it)
 {
-	char pathimage[30] = "../../img_train/";
-	char pathlabel[30] = "../../label_train/";
-
+	
 	int length = net.length;
 	StoreMatrix Outputs = *(net.pt_wbo + 2);
 
 	for (int i = 0; i < nb_it; i++)
 	{
-		int r = rand() % 10000;
+		char pathimage[100] = "../../img_train/";
+		char pathlabel[100] = "../../label_train/";
+
+		int r = rand() % 1000;
 
 		Matrix image = GetImage(pathimage, r);
 		image.rows *= image.columns;
@@ -88,15 +90,19 @@ void TrainNetwork(Network net, int nb_it)
 		*(Target.pt + label) = 1;
 
 		feedforward(net, length);
-		Matrix Error = backprop_on_last(net, Target, length);
-		backprop_on_hidden(net, Error, length);
+		printf("ROWS->%d and COLS->%d\n", Target.rows, Target.columns);
+		Matrix Error = backprop_on_last(net, Target, length); //ERROR SIZE (SUB AND HADAMAR)
+		printf("ROWS->%d and COLS->%d\n", Error.rows, Error.columns);
+		backprop_on_hidden(net, Error, length); //ERROR SIZE (mult)
+		free(Error.pt);
+		free(Target.pt);
 	}
 }
 
 void TestNetwork(Network net)
 {
-	char pathimage[] = "../../img_test/";
-	char pathlabel[] = "../../label_test/";
+	char pathimage[100] = "../../img_test/";
+	char pathlabel[100] = "../../label_test/";
 
 	int length = net.length;
 	StoreMatrix Outputs = *(net.pt_wbo + 2);
@@ -122,6 +128,7 @@ void TestNetwork(Network net)
 	}
 }
 
+//good
 Network CreateNetwork()
 {
 	Matrix sizes = init_matrix_zero(1, 3);

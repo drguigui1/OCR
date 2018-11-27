@@ -15,14 +15,17 @@
 
 void test()
 {
-	char path[22] = "../../img_test/";
-	Matrix M = GetImage(path, 2);
-	//int tmp = M.columns;
-	//M.columns = 1;
-	//M.rows *= tmp;
-	print_matrix(M);
-	printf("\n%d %d\n", M.rows, M.columns);
-	free(M.pt);
+	for (int i = 2300; i<2310; i++)
+	{
+		char path[100] = "../../img_train/";
+		Matrix M = GetImage(path, i);
+		//int tmp = M.columns;
+		//M.columns = 1;
+		//M.rows *= tmp;
+		//print_matrix(M);
+		//printf("\n%d %d\n", M.rows, M.columns);
+		free(M.pt);
+	}
 }
 
 int main()
@@ -39,18 +42,24 @@ int main()
 
 	srand(time(NULL));
 	xor(sizes);
-	free(size.pt);
-	*/
+	free(sizes.pt);*/
+	
+	// OCR
 
 	/*Network net = CreateNetwork();
-	TrainNetwork();
-	TestNetwork(net);*/
+	TrainNetwork(net, 1);
+	TestNetwork(net);
 
-	Network net = CreateNetwork();
+	free_network(net);
+*/
+	// TEST
+
+	/*Network net = CreateNetwork();
+	feedforward(net, net.length);
 	print_network(net, net.length);
 	free_network(net);
-
-
+*/
+	//test();
 	return 0;
 
 }

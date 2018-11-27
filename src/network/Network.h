@@ -27,6 +27,7 @@ void print_network(Network net, int length);
 Matrix backprop_on_last(Network net, Matrix Target, int length);
 void backprop_on_hidden(Network net, Matrix ErrorLast, int length);
 void free_network(Network net);
+void free_storeM(StoreMatrix K, int len);
 
 //void print_result(Network net, int length);
 

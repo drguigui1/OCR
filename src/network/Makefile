@@ -1,6 +1,6 @@
 # Makefile
 
-CC = gcc -fsanitize=address
+CC = gcc -fsanitize=address 
 CPPFLAGS = -MMD
 CFLAGS = -Wall -Wextra -std=c99 -O0 -lm -g -lSDL -lSDL_image 
 LDFLAGS =

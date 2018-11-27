@@ -65,6 +65,13 @@ void xor(Matrix sizes)
         r = r%4;
         Matrix Input = *(XOR.matrices + r);
 
+
+		/*    PROB!!!!!!!!!!     */
+
+		/*if(k)
+		{
+			free((Outputs.matrices)->pt);
+		}*/
         *(Outputs.matrices) = Input;
 
         //feedforward
@@ -72,11 +79,12 @@ void xor(Matrix sizes)
 
         Matrix Error = backprop_on_last(net, *(LABEL.matrices + r), length);
         backprop_on_hidden(net, Error, length);
+        //free(Input.pt);
      }
 
      //test the network (after training)
      int out = 0;
-     while (!out)
+     while (out != 4)
      {
      	printf("\nEnter 0 or 1 to test XOR : \n");
         double user_entry1 = 0;
@@ -112,7 +120,9 @@ void xor(Matrix sizes)
         printf("|-----------|\n");
         printf("Result : \n");
         print_network(net, length);
+        out++;
      }
+     free_network(net);
 
 }
 

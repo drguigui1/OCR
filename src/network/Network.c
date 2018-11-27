@@ -72,11 +72,19 @@ void feedforward(Network net, int length)
 		Matrix B = *(Bias.matrices + i);
 		Matrix tab = init_matrix(W.rows, 1);
 
-		tab = add_matrix(mult_matrix(W, O), B);
+		Matrix T = mult_matrix(W, O);
+		tab = add_matrix(T, B);
 		apply_func(tab, sigmoid);
+
+		/* FREE */
+		free((Outputs.matrices + i + 1)->pt);
+
 		*(Outputs.matrices + i + 1) = tab;
+
+		/* FREE */
+		free(T.pt);
 	}
-	*(net.pt_wbo + 2) = Outputs;
+	//*(net.pt_wbo + 2) = Outputs;
 }
 
 /*------------------------------*/
@@ -92,7 +100,7 @@ Matrix error_hidden(Matrix Weight, Matrix Error)
 {
 	Matrix A = init_matrix(Weight.columns, Weight.rows);
 	A = transpose_matrix(Weight);
-	return mult_matrix(A, Error);
+	return  mult_matrix(A, Error);
 }
 
 /*------------------------------*/
@@ -140,15 +148,14 @@ Matrix backprop_on_last(Network net, Matrix Target, int length)
 	Matrix Delt = delta(Sgd, O_l_1);
 	//weights update
 	W = add_matrix(W, Delt);
+	free((Weights.matrices + length-2)->pt);
 	*(Weights.matrices + length-2) = W;
 	//bias update
 	B = add_matrix(B, Sgd);
 
+	free((Bias.matrices + length-2)->pt);
 	*(Bias.matrices + length-2) = B;
-
-	*(net.pt_wbo) = Weights;
-	*(net.pt_wbo +1) = Bias;
-	*(net.pt_wbo +2) = Outputs;
+	free(Sgd.pt);
 
 	free(O.pt);
 	free(O_l_1.pt);
@@ -165,6 +172,7 @@ void backprop_on_hidden(Network net, Matrix Errorlast, int length)
 	StoreMatrix Outputs = *(net.pt_wbo + 2);
 
 	Matrix Error = copy_matrix(Errorlast);
+	free(Errorlast.pt);
 
 	for (int i = length - 2; i > 0; i--)
 	{
@@ -183,18 +191,29 @@ void backprop_on_hidden(Network net, Matrix Errorlast, int length)
 		W = add_matrix(W, Delt);
 		B = add_matrix(B, Sgd);
 		
+
+		/* FREE */
+		free((Weights.matrices + i-1)->pt);
+		free((Bias.matrices + i-1)->pt);
+		
 		*(Weights.matrices + i-1) = W;
 		*(Bias.matrices + i-1) = B;
 
+		free(Sgd.pt);
 		free(O.pt);
 		free(O_l_1.pt);
 		free(Wl1.pt);
 	}
-	*(net.pt_wbo) = Weights;
-	*(net.pt_wbo + 1) = Bias;
-	*(net.pt_wbo + 2) = Outputs;
 
 	free(Error.pt);
+}
+
+void free_storeM(StoreMatrix S, int len)
+{
+	for (int i = 0; i < len; i++)
+	{
+		free((S.matrices + i)->pt);
+	}
 }
 
 void free_network(Network net)
@@ -228,7 +247,7 @@ void print_network(Network net, int length)
 {
 	
 	StoreMatrix Weights = *(net.pt_wbo);
-        StoreMatrix Bias = *(net.pt_wbo + 1);
+    StoreMatrix Bias = *(net.pt_wbo + 1);
 	StoreMatrix Outputs = *(net.pt_wbo + 2);	
 
 	//Weights
@@ -236,6 +255,9 @@ void print_network(Network net, int length)
 	for (int i = 0; i < (length-1); i++)
 	{
 		print_matrix(*(Weights.matrices + i));
+		//int r = (*(Weights.matrices+i)).rows;
+        //int c = (*(Weights.matrices+i)).columns;
+        //printf("ROWS ->%d, COLS->%d\n", r, c);
 		printf("\n");	
 	}
 	
@@ -244,6 +266,9 @@ void print_network(Network net, int length)
 	for (int j = 0; j < (length-1); j++)
 	{
 		print_matrix(*(Bias.matrices + j));
+		//int r = (*(Bias.matrices+j)).rows;
+        //int c = (*(Bias.matrices+j)).columns;
+        //printf("ROWS ->%d, COLS->%d\n", r, c);
 		printf("\n");
 	}
 
@@ -252,6 +277,9 @@ void print_network(Network net, int length)
 	for (int k = 0; k < length; k++)
 	{
 		print_matrix(*(Outputs.matrices + k));
+		//int r = (*(Outputs.matrices+k)).rows;                                   
+        //int c = (*(Outputs.matrices+k)).columns;                                
+        //printf("ROWS ->%d, COLS->%d\n", r, c);
 		printf("\n");
 	}
 	printf("|----------------------|\n");
