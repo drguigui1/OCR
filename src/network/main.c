@@ -15,13 +15,14 @@
 
 void test()
 {
-	/*char path[22] = "../../img_test/";
+	char path[22] = "../../img_test/";
 	Matrix M = GetImage(path, 2);
-	int tmp = M.columns;
-	M.columns = 1;
-	M.rows *= tmp;
+	//int tmp = M.columns;
+	//M.columns = 1;
+	//M.rows *= tmp;
 	print_matrix(M);
-	free(M.pt);*/
+	//printf("%d\n", M.rows);
+	free(M.pt);
 }
 
 int main()
@@ -44,7 +45,7 @@ int main()
 	/*Network net = CreateNetwork();
 	TrainNetwork();
 	TestNetwork(net);*/
-	//test();
+	test();
 
 	return 0;
 

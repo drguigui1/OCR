@@ -18,7 +18,9 @@ Matrix GetImage(char path[], int img_number)
 	sprintf(img_name, "%d", img_number);
 	strcat(img_name, ".png");
 	strcat(path, img_name);
-	Matrix M = img_to_matrix(load_image(path));
+	SDL_Surface* img = load_image(path);
+	Matrix M = img_to_matrix(img);
+	free(img);
 	return M;
 }
 
