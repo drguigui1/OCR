@@ -132,9 +132,9 @@ void TestNetwork(Network net)
 Network CreateNetwork()
 {
 	Matrix sizes = init_matrix_zero(1, 3);
-	*(sizes.pt) = 625;
-	*(sizes.pt + 1) = 125;
-	*(sizes.pt + 2) = 76;
+	*(sizes.pt) = /*625*/12;
+	*(sizes.pt + 1) = /*125*/5;
+	*(sizes.pt + 2) = /*76*/7;
 
 	Network net = init_all(sizes, 3);
 

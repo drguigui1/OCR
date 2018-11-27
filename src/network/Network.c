@@ -70,10 +70,9 @@ void feedforward(Network net, int length)
 		Matrix W = *(Weights.matrices + i);
 		Matrix O = *(Outputs.matrices + i);
 		Matrix B = *(Bias.matrices + i);
-		Matrix tab = init_matrix(W.rows, 1);
 
 		Matrix T = mult_matrix(W, O);
-		tab = add_matrix(T, B);
+		Matrix tab = add_matrix(T, B);
 		apply_func(tab, sigmoid);
 
 		/* FREE */
@@ -84,7 +83,6 @@ void feedforward(Network net, int length)
 		/* FREE */
 		free(T.pt);
 	}
-	//*(net.pt_wbo + 2) = Outputs;
 }
 
 /*------------------------------*/
@@ -98,9 +96,9 @@ Matrix error_last_layer(Matrix Target, Matrix Output)
 //Error : error of the l+1 layer
 Matrix error_hidden(Matrix Weight, Matrix Error)
 {
-	Matrix A = init_matrix(Weight.columns, Weight.rows);
-	A = transpose_matrix(Weight);
-	return  mult_matrix(A, Error);
+	Matrix A = transpose_matrix(Weight);
+	A = mult_matrix(A, Error);
+	return A;
 }
 
 /*------------------------------*/
@@ -121,9 +119,10 @@ Matrix SGD(Matrix Output, Matrix Error, double lr)
 //call this function with copy of Output_l_1
 Matrix delta(Matrix Sgd, Matrix Output_l_1)
 {
-	Matrix B = init_matrix(Output_l_1.columns, Output_l_1.rows);
-	B = transpose_matrix(Output_l_1);
-	return mult_matrix(Sgd, B);
+	Matrix B = transpose_matrix(Output_l_1);
+	Matrix B2 = mult_matrix(Sgd, B);
+	free(B.pt);
+	return B2;
 } //apply it on weights*/
 
 /*--------------------------------*/
@@ -156,6 +155,7 @@ Matrix backprop_on_last(Network net, Matrix Target, int length)
 	free((Bias.matrices + length-2)->pt);
 	*(Bias.matrices + length-2) = B;
 	free(Sgd.pt);
+	free(Delt.pt);
 
 	free(O.pt);
 	free(O_l_1.pt);
@@ -199,6 +199,7 @@ void backprop_on_hidden(Network net, Matrix Errorlast, int length)
 		*(Weights.matrices + i-1) = W;
 		*(Bias.matrices + i-1) = B;
 
+		free(Delt.pt);
 		free(Sgd.pt);
 		free(O.pt);
 		free(O_l_1.pt);

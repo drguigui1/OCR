@@ -59,28 +59,24 @@ void xor(Matrix sizes)
 
     StoreMatrix Outputs = *(net.pt_wbo + 2);
 
+	Matrix Input1;
+
 	for (int k = 0; k < 10000; k++)
     {
      	int r = rand();
         r = r%4;
-        Matrix Input = *(XOR.matrices + r);
+        Input1 = *(XOR.matrices + r);
 
 
-		/*    PROB!!!!!!!!!!     */
-
-		/*if(k)
-		{
-			free((Outputs.matrices)->pt);
-		}*/
-        *(Outputs.matrices) = Input;
+        *(Outputs.matrices) = Input1;
 
         //feedforward
         feedforward(net, length);
 
         Matrix Error = backprop_on_last(net, *(LABEL.matrices + r), length);
         backprop_on_hidden(net, Error, length);
-        //free(Input.pt);
      }
+     free(Input1.pt);
 
      //test the network (after training)
      int out = 0;
@@ -112,16 +108,18 @@ void xor(Matrix sizes)
         *(Input.pt + 1) = user_entry2; 
 
         StoreMatrix O = *(net.pt_wbo + 2);
+        //free((O.matrices)->pt);
         *(O.matrices) = Input;
-        *(net.pt_wbo + 2) = O;
 
         feedforward(net, length);
-        Outputs = *(net.pt_wbo + 2);
+        O = *(net.pt_wbo + 2);
         printf("|-----------|\n");
         printf("Result : \n");
         print_network(net, length);
         out++;
+        //free(Input.pt);
      }
+
      free_network(net);
 
 }

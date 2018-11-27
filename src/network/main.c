@@ -33,7 +33,7 @@ int main()
 	srand(time(NULL));
 	//XOR
 	//init sizes = [2,3,1]
-	/*Matrix sizes = init_matrix(1, 3);
+	Matrix sizes = init_matrix(1, 3);
 	*(sizes.pt) = 2;
 	*(sizes.pt + 1) = 3;
     *(sizes.pt + 2) = 1;
@@ -42,7 +42,7 @@ int main()
 
 	srand(time(NULL));
 	xor(sizes);
-	free(sizes.pt);*/
+	free(sizes.pt);
 	
 	// OCR
 
@@ -57,6 +57,15 @@ int main()
 	/*Network net = CreateNetwork();
 	feedforward(net, net.length);
 	print_network(net, net.length);
+	printf("|--------------------|\n");
+	Matrix Target = init_matrix_zero(7, 1);
+	Matrix Error = backprop_on_last(net, Target, net.length);
+	print_matrix(Error);
+	printf("|-------------------|\n");
+	backprop_on_hidden(net, Error, net.length);
+
+	free(Error.pt);
+	free(Target.pt);
 	free_network(net);
 */
 	//test();
