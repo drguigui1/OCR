@@ -36,7 +36,6 @@ Uint32 get_pixel(SDL_Surface *surface, unsigned x, unsigned y)
         case 4:
             return *(Uint32 *)p;
     }
-
     return 0;
 }
 
@@ -53,7 +52,7 @@ Matrix img_to_matrix(SDL_Surface* img)
          	for(int j = 0; j < height; j++)
             {
 				Uint8 r, g, b;
-				SDL_GetRGB(get_pixel(img, i, j), img->format, &r, &g, &b);
+                SDL_GetRGB(get_pixel(img, i, j), img->format, &r, &g, &b);
            		double val = (double) (r+g+b)/3;
                 *(M.pt + i*height + j) = val;
             }

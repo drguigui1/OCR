@@ -21,7 +21,7 @@ void test()
 	//M.columns = 1;
 	//M.rows *= tmp;
 	print_matrix(M);
-	//printf("%d\n", M.rows);
+	printf("\n%d %d\n", M.rows, M.columns);
 	free(M.pt);
 }
 

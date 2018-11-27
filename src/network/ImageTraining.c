@@ -20,7 +20,7 @@ Matrix GetImage(char path[], int img_number)
 	strcat(path, img_name);
 	SDL_Surface* img = load_image(path);
 	Matrix M = img_to_matrix(img);
-	free(img);
+	SDL_FreeSurface(img);
 	return M;
 }
 
