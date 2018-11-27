@@ -45,9 +45,13 @@ int main()
 	/*Network net = CreateNetwork();
 	TrainNetwork();
 	TestNetwork(net);*/
-	test();
 
-	return 0;
+	Network net = CreateNetwork();
+	print_network(net, net.length);
+	free(net.pt_wbo);
+
+
+	retur 0;
 
 }
 

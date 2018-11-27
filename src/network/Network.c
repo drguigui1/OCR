@@ -200,14 +200,17 @@ void print_network(Network net, int length)
 {
 	
 	StoreMatrix Weights = *(net.pt_wbo);
-        StoreMatrix Bias = *(net.pt_wbo + 1);
+    StoreMatrix Bias = *(net.pt_wbo + 1);
 	StoreMatrix Outputs = *(net.pt_wbo + 2);	
 
 	//Weights
 	printf("Weights\n");
 	for (int i = 0; i < (length-1); i++)
 	{
-		print_matrix(*(Weights.matrices + i));
+		//print_matrix(*(Weights.matrices + i));
+		int r = (*(Weights.matrices+i)).rows;
+		int c = (*(Weights.matrices+i)).columns;
+		printf("ROWS ->%d, COLS->%d\n", r, c);
 		printf("\n");	
 	}
 	
@@ -215,7 +218,10 @@ void print_network(Network net, int length)
 	printf("Biases\n");
 	for (int j = 0; j < (length-1); j++)
 	{
-		print_matrix(*(Bias.matrices + j));
+		//print_matrix(*(Bias.matrices + j));
+		int r = (*(Bias.matrices+j)).rows;
+		int c = (*(Bias.matrices+j)).columns;
+		printf("ROWS ->%d, COLS->%d\n", r, c);
 		printf("\n");
 	}
 
@@ -223,7 +229,10 @@ void print_network(Network net, int length)
 	printf("Outputs\n");
 	for (int k = 0; k < length; k++)
 	{
-		print_matrix(*(Outputs.matrices + k));
+		//print_matrix(*(Outputs.matrices + k));
+		int r = (*(Outputs.matrices+k)).rows;
+		int c = (*(Outputs.matrices+k)).columns;
+		printf("ROWS ->%d, COLS->%d\n", r, c);
 		printf("\n");
 	}
 	printf("|----------------------|\n");

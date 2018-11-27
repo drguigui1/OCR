@@ -12,6 +12,7 @@
 #include "Image_Func.h"
 
 
+//good
 Matrix GetImage(char path[], int img_number)
 {
 	char img_name[6];
