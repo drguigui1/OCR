@@ -143,6 +143,8 @@ Matrix backprop_on_last(Network net, Matrix Target, int length)
 	Matrix W = *(Weights.matrices + length-2);
 	Matrix B = *(Bias.matrices + length-2);
 	
+    printf("%d %d\n", Target.rows, Target.columns);
+    printf("%d %d\n", O.rows, O.columns);
 	Matrix Error = error_last_layer(Target, O); //error
 
 	Matrix Sgd = SGD(O, Error, 0.4);//learning rate error
@@ -174,7 +176,6 @@ void backprop_on_hidden(Network net, Matrix Errorlast, int length)
 	StoreMatrix Outputs = *(net.pt_wbo + 2);
 
 	Matrix Error = copy_matrix(Errorlast);
-	free(Errorlast.pt);
 
 	for (int i = length - 2; i > 0; i--)
 	{
@@ -184,7 +185,7 @@ void backprop_on_hidden(Network net, Matrix Errorlast, int length)
 		Matrix Wl1 = copy_matrix(*(Weights.matrices + i));
 		Matrix W = *(Weights.matrices + i-1);
 		Matrix B = *(Bias.matrices + i-1);
-
+        //printf("%d %d\n", Error.rows, Error.columns);
 		Error = error_hidden(Wl1, Error);
 		Matrix Sgd = SGD(O, Error, 0.4);
 
@@ -217,6 +218,7 @@ void free_storeM(StoreMatrix S, int len)
 	{
 		free((S.matrices + i)->pt);
 	}
+    free(S.matrices);
 }
 
 void free_network(Network net)
@@ -235,7 +237,7 @@ void free_network(Network net)
 		free((Bias.matrices + j)->pt);
 
 	//Outputs
-	for (int k = 0; k < net.length; k++)
+	for (int k = 0; k < Outputs.nb; k++)
 		free((Outputs.matrices + k)->pt);
     
     free(Weights.matrices);

@@ -31,7 +31,7 @@ int GetLabel(char path[], int label_number)
 {
 	FILE* file;
 
-	char label_name[10] = "";
+	char label_name[100] = "";
 	sprintf(label_name, "%d", label_number);
 	strcat(label_name, ".txt");
 	strcat(path, label_name);
@@ -70,6 +70,7 @@ void TrainNetwork(Network net, int nb_it)
 	
 	int length = net.length;
 	StoreMatrix Outputs = *(net.pt_wbo + 2);
+    free((Outputs.matrices)->pt);
 
 	for (int i = 0; i < nb_it; i++)
 	{
@@ -81,12 +82,12 @@ void TrainNetwork(Network net, int nb_it)
 		Matrix image = GetImage(pathimage, r);
 		image.rows *= image.columns;
 		image.columns = 1;
-
-		*(Outputs.matrices) = image;
+        
+        *(Outputs.matrices) = image;
 		
 		int label = GetLabel(pathlabel, r);
 		
-		Matrix Target = init_matrix_zero(1, 76);
+		Matrix Target = init_matrix_zero(76, 1);
 		*(Target.pt + label) = 1;
 
 		feedforward(net, length);
@@ -94,26 +95,27 @@ void TrainNetwork(Network net, int nb_it)
 		Matrix Error = backprop_on_last(net, Target, length); //ERROR SIZE (SUB AND HADAMAR)
 		printf("ROWS->%d and COLS->%d\n", Error.rows, Error.columns);
 		backprop_on_hidden(net, Error, length); //ERROR SIZE (mult)
-		free(Error.pt);
+		free(image.pt);
+        free(Error.pt);
 		free(Target.pt);
 	}
 }
 
 void TestNetwork(Network net)
 {
-	char pathimage[100] = "../../img_test/";
-	char pathlabel[100] = "../../label_test/";
-
 	int length = net.length;
 	StoreMatrix Outputs = *(net.pt_wbo + 2);
+    *(Outputs.matrices) = init_matrix_zero(12 , 1);
 
-	for (int i = 0; i < 1000; i++)
+	for (int i = 0; i < 500; i++)
 	{
+	    char pathimage[100] = "../../img_test/";
+	    char pathlabel[100] = "../../label_test/";
 
 		Matrix image = GetImage(pathimage, i);
 		image.rows *= image.columns;
 		image.columns = 1;
-
+        free((Outputs.matrices)->pt);
 		*(Outputs.matrices) = image;
 		
 		feedforward(net, length);
@@ -125,6 +127,8 @@ void TestNetwork(Network net)
 		
 		printf("RESULT -> %c\n", c_out);
 		printf("LABEL  -> %c\n", c_lab);
+
+        //free(image.pt);
 	}
 }
 

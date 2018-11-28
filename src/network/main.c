@@ -2,9 +2,6 @@
 #include <stdlib.h>
 #include <time.h>
 
-
-
-
 #include "xor.h"
 #include "Matrix.h"
 #include "MathForOcr.h"
@@ -38,20 +35,21 @@ int main()
 	*(sizes.pt + 1) = 3;
     *(sizes.pt + 2) = 1;
 
-	
+	Network net = LoadNetwork();
+    print_network(net, net.length);
+    free_network(net);
 
-	srand(time(NULL));
-	xor(sizes);
+	//xor(sizes);
 	free(sizes.pt);
-	
+	/*
 	// OCR
 
-	/*Network net = CreateNetwork();
+	Network net = CreateNetwork();
 	TrainNetwork(net, 1);
 	TestNetwork(net);
 
 	free_network(net);
-*/
+    */
 	// TEST
 
 	/*Network net = CreateNetwork();

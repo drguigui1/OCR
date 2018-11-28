@@ -33,7 +33,7 @@ void xor(Matrix sizes)
     *(XOR.matrices+2) = xor3;
     *(XOR.matrices+3) = xor4;
 
-    Matrix label1 = init_matrix(1,1);                                                                                                                                                                                                                                      
+    Matrix label1 = init_matrix(1,1);                                                                                                                                                                              
     Matrix label2 = init_matrix(1,1);                                                                                                                                                                                                                                      
     Matrix label3 = init_matrix(1,1);                                                                                                                                                                                                                                      
     Matrix label4 = init_matrix(1,1);                                                                                                                                                                                                                                      
@@ -61,7 +61,7 @@ void xor(Matrix sizes)
 
 	Matrix Input1;
 
-	for (int k = 0; k < 10000; k++)
+	for (int k = 0; k < 5; k++)
     {
      	int r = rand();
         r = r%4;
@@ -75,7 +75,9 @@ void xor(Matrix sizes)
 
         Matrix Error = backprop_on_last(net, *(LABEL.matrices + r), length);
         backprop_on_hidden(net, Error, length);
-     }
+        free(Error.pt); 
+    }
+     
      free(Input1.pt);
 
      //test the network (after training)
@@ -119,7 +121,8 @@ void xor(Matrix sizes)
         out++;
         //free(Input.pt);
      }
-
+     print_network(net, net.length);
+     SaveNetwork(net);
      free_network(net);
 
 }
