@@ -30,25 +30,25 @@ int main()
 	srand(time(NULL));
 	//XOR
 	//init sizes = [2,3,1]
-	Matrix sizes = init_matrix(1, 3);
+	/*Matrix sizes = init_matrix(1, 3);
 	*(sizes.pt) = 2;
 	*(sizes.pt + 1) = 3;
     *(sizes.pt + 2) = 1;
 
-	Network net = LoadNetwork(sizes);
-    free_network(net);
+	//Network net = LoadNetwork(sizes);
+    //free_network(net);
 
-	//xor(sizes);
-	free(sizes.pt);
-	/*
+	xor(sizes);
+	free(sizes.pt);*/
+	
 	// OCR
 
 	Network net = CreateNetwork();
-	TrainNetwork(net, 1);
+	TrainNetwork(net, 5);
 	TestNetwork(net);
 
 	free_network(net);
-    */
+    
 	// TEST
 
 	/*Network net = CreateNetwork();

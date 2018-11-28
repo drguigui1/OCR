@@ -61,7 +61,7 @@ void xor(Matrix sizes)
 
 	Matrix Input1;
 
-	for (int k = 0; k < 5; k++)
+	for (int k = 0; k < 10000; k++)
     {
      	int r = rand();
         r = r%4;

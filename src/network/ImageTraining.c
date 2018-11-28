@@ -107,7 +107,7 @@ void TestNetwork(Network net)
 	StoreMatrix Outputs = *(net.pt_wbo + 2);
     *(Outputs.matrices) = init_matrix_zero(12 , 1);
 
-	for (int i = 0; i < 500; i++)
+	for (int i = 0; i < 5; i++)
 	{
 	    char pathimage[100] = "../../img_test/";
 	    char pathlabel[100] = "../../label_test/";
@@ -136,9 +136,9 @@ void TestNetwork(Network net)
 Network CreateNetwork()
 {
 	Matrix sizes = init_matrix_zero(1, 3);
-	*(sizes.pt) = /*625*/12;
-	*(sizes.pt + 1) = /*125*/5;
-	*(sizes.pt + 2) = /*76*/7;
+	*(sizes.pt) = 625;
+	*(sizes.pt + 1) = 125;
+	*(sizes.pt + 2) = 76;
 
 	Network net = init_all(sizes, 3);
 

@@ -143,8 +143,8 @@ Matrix backprop_on_last(Network net, Matrix Target, int length)
 	Matrix W = *(Weights.matrices + length-2);
 	Matrix B = *(Bias.matrices + length-2);
 	
-    printf("%d %d\n", Target.rows, Target.columns);
-    printf("%d %d\n", O.rows, O.columns);
+	printf("|--OUT---|\n");
+	print_matrix(O);
 	Matrix Error = error_last_layer(Target, O); //error
 
 	Matrix Sgd = SGD(O, Error, 0.4);//learning rate error
@@ -185,7 +185,6 @@ void backprop_on_hidden(Network net, Matrix Errorlast, int length)
 		Matrix Wl1 = copy_matrix(*(Weights.matrices + i));
 		Matrix W = *(Weights.matrices + i-1);
 		Matrix B = *(Bias.matrices + i-1);
-        //printf("%d %d\n", Error.rows, Error.columns);
 		Error = error_hidden(Wl1, Error);
 		Matrix Sgd = SGD(O, Error, 0.4);
 
