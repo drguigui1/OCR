@@ -143,9 +143,11 @@ Matrix backprop_on_last(Network net, Matrix Target, int length)
 	Matrix W = *(Weights.matrices + length-2);
 	Matrix B = *(Bias.matrices + length-2);
 	
-	printf("|--OUT---|\n");
-	print_matrix(O);
+	//printf("|--OUT---|\n");
+	//print_matrix(O);
 	Matrix Error = error_last_layer(Target, O); //error
+	//printf("|---Error----|\n");
+	//print_matrix(Error);
 
 	Matrix Sgd = SGD(O, Error, 0.4);//learning rate error
 	Matrix Delt = delta(Sgd, O_l_1);

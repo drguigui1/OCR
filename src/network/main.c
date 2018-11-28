@@ -43,12 +43,12 @@ int main()
 	
 	// OCR
 
-	/*Network net = CreateNetwork();
-	TrainNetwork(net, 5);
+	Network net = CreateNetwork();
+	TrainNetwork(net, 200);
 	TestNetwork(net);
 
 	free_network(net);
-    */
+    
 	// TEST
 
 	/*Network net = CreateNetwork();

@@ -22,7 +22,21 @@ Matrix GetImage(char path[], int img_number)
 	SDL_Surface* img = load_image(path);
 	Matrix M = img_to_matrix(img);
 	SDL_FreeSurface(img);
-	printf("%s\n", img_name);
+	//printf("%s\n", img_name);
+	for (int i = 0; i < M.rows; i++)
+	{
+		for (int j = 0; j < M.columns; j++)
+		{
+			if (*(M.pt + i*M.columns + j) == 255)
+			{
+				*(M.pt + i*M.columns + j) = 1;
+			}
+			else
+			{
+				*(M.pt + i*M.columns + j) = 0;
+			}
+		}
+	}
 	return M;
 }
 
@@ -41,7 +55,7 @@ int GetLabel(char path[], int label_number)
 	{
 		int target;
 		char label = fgetc(file);
-		printf("%c\n", label);
+		//printf("%c\n", label);
 		
 		if (47 < label && label < 58)
 			target = label - 48;
@@ -82,7 +96,9 @@ void TrainNetwork(Network net, int nb_it)
 		Matrix image = GetImage(pathimage, r);
 		image.rows *= image.columns;
 		image.columns = 1;
-        
+        //printf("ROWS -> %d\n", image.rows);
+        //printf("COLS -> %d\n", image.columns);
+
         *(Outputs.matrices) = image;
 		
 		int label = GetLabel(pathlabel, r);
@@ -91,13 +107,13 @@ void TrainNetwork(Network net, int nb_it)
 		*(Target.pt + label) = 1;
 
 		feedforward(net, length);
-		printf("ROWS->%d and COLS->%d\n", Target.rows, Target.columns);
-		Matrix Error = backprop_on_last(net, Target, length); //ERROR SIZE (SUB AND HADAMAR)
-		printf("ROWS->%d and COLS->%d\n", Error.rows, Error.columns);
-		backprop_on_hidden(net, Error, length); //ERROR SIZE (mult)
+		Matrix Error = backprop_on_last(net, Target, length);
+		backprop_on_hidden(net, Error, length); 
+		//print_network(net, net.length);
 		free(image.pt);
         free(Error.pt);
 		free(Target.pt);
+		printf("%d\n", i);
 	}
 }
 
@@ -107,7 +123,7 @@ void TestNetwork(Network net)
 	StoreMatrix Outputs = *(net.pt_wbo + 2);
     *(Outputs.matrices) = init_matrix_zero(12 , 1);
 
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < 10; i++)
 	{
 	    char pathimage[100] = "../../img_test/";
 	    char pathlabel[100] = "../../label_test/";
