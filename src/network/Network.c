@@ -97,8 +97,10 @@ Matrix error_last_layer(Matrix Target, Matrix Output)
 Matrix error_hidden(Matrix Weight, Matrix Error)
 {
 	Matrix A = transpose_matrix(Weight);
-	A = mult_matrix(A, Error);
-	return A;
+	Matrix A2 = mult_matrix(A, Error);
+	free(A.pt);
+	free(Error.pt);
+	return A2;
 }
 
 /*------------------------------*/
