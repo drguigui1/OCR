@@ -63,14 +63,12 @@ StoreMatrix LoadData(DataType type)
 	if (file != NULL)
 	{
 		int nb_matrix = fgetc(file);
-        printf("%d\n", nb_matrix);
 		StoreMatrix M = init_StoreMatrix(nb_matrix);
 
 		for (int i = 0; i < nb_matrix; ++i)
 		{
 			int rows = fgetc(file);
 			int columns = fgetc(file);
-			printf("%d %d\n", rows, columns);
 
 			Matrix m = init_matrix(rows, columns);
 
@@ -94,15 +92,13 @@ StoreMatrix LoadData(DataType type)
 		errx(1, "ERROR while opening file in LoadData\n");
 }
 
-Network LoadNetwork()
+Network LoadNetwork(Matrix sizes)
 {
-	printf("weights\n");
     StoreMatrix weights = LoadData(Weights);
-	printf("bias\n");
     StoreMatrix bias = LoadData(Bias);
-	Network net = init_network(3);
-	*(net.pt_wbo) = weights;
-	*(net.pt_wbo) = bias;
-
+	Network net = init_all(sizes, 3);
+    *(net.pt_wbo) = weights;
+	*(net.pt_wbo+1) = bias; 
+    print_network(net, 3);
 	return net;
 }

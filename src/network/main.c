@@ -35,8 +35,7 @@ int main()
 	*(sizes.pt + 1) = 3;
     *(sizes.pt + 2) = 1;
 
-	Network net = LoadNetwork();
-    print_network(net, net.length);
+	Network net = LoadNetwork(sizes);
     free_network(net);
 
 	//xor(sizes);
