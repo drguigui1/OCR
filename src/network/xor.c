@@ -61,7 +61,7 @@ void xor(Matrix sizes)
 
 	Matrix Input1;
 
-	for (int k = 0; k < 10000; k++)
+	for (int k = 0; k < 2000000; k++)
     {
      	int r = rand();
         r = r%4;
@@ -76,6 +76,8 @@ void xor(Matrix sizes)
         Matrix Error = backprop_on_last(net, *(LABEL.matrices + r), length);
         backprop_on_hidden(net, Error, length);
         free(Error.pt); 
+        printf("\n---NETWORK---\n");
+        print_network(net, net.length);
     }
      
      free(Input1.pt);

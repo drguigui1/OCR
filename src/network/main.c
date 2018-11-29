@@ -10,20 +10,6 @@
 #include "ImageTraining.h"
 
 
-void test()
-{
-	for (int i = 2300; i<2310; i++)
-	{
-		char path[100] = "../../img_train/";
-		Matrix M = GetImage(path, i);
-		//int tmp = M.columns;
-		//M.columns = 1;
-		//M.rows *= tmp;
-		//print_matrix(M);
-		//printf("\n%d %d\n", M.rows, M.columns);
-		free(M.pt);
-	}
-}
 
 int main()
 {
@@ -39,13 +25,13 @@ int main()
     //free_network(net);
 
 	xor(sizes);
-	free(sizes.pt);*/
-	
+	free(sizes.pt);
+	*/
 	// OCR
 
 	Network net = CreateNetwork();
-	TrainNetwork(net, 200);
-	TestNetwork(net);
+	TrainNetwork(net, 10);
+	//TestNetwork(net);
 
 	free_network(net);
     
@@ -65,7 +51,6 @@ int main()
 	free(Target.pt);
 	free_network(net);
 */
-	//test();
 	return 0;
 
 }

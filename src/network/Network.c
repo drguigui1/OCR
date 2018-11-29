@@ -149,7 +149,7 @@ Matrix backprop_on_last(Network net, Matrix Target, int length)
 	//printf("|---Error----|\n");
 	//print_matrix(Error);
 
-	Matrix Sgd = SGD(O, Error, 0.4);//learning rate error
+	Matrix Sgd = SGD(O, Error, 0.25);//learning rate error
 	Matrix Delt = delta(Sgd, O_l_1);
 	//weights update
 	W = add_matrix(W, Delt);
