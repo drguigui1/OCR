@@ -29,8 +29,13 @@ int main()
 	*/
 	// OCR
 
-	Network net = CreateNetwork();
-	TrainNetwork(net, 50000);
+	//Network net = CreateNetwork();
+	//TrainNetwork(net, 50000);
+	//TestNetwork(net);
+	//SaveNetwork(net);
+	
+	Network net = LoadNetwork();
+	print_network(net, 3);
 	TestNetwork(net);
 
 	free_network(net);

@@ -112,7 +112,7 @@ void TrainNetwork(Network net, int nb_it)
 		backprop_on_hidden(net, Error, length); 
 		//printf("\n");
 		//print_matrix(Error);
-		if (i == 0 || i == nb_it-1 || i == nb_it-2)
+		if (i == nb_it-1)
 		{
 			printf("\n----NETWORK----%d\n", i);
 			printf("\n---%d---\n", label);
