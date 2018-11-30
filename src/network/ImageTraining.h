@@ -10,5 +10,6 @@ void TestNetwork(Network net);
 Network CreateNetwork ();
 int max_M(Matrix M);
 unsigned char convert_to_ascii(int pos);
+char[] ApplyOCR(Matrix images, int length);
 
 #endif

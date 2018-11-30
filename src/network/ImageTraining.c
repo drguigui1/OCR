@@ -112,7 +112,7 @@ void TrainNetwork(Network net, int nb_it)
 		backprop_on_hidden(net, Error, length); 
 		//printf("\n");
 		//print_matrix(Error);
-		if (i == nb_it-1)
+		if (i == 0 || i == nb_it-1 || i == nb_it-2)
 		{
 			printf("\n----NETWORK----%d\n", i);
 			printf("\n---%d---\n", label);
@@ -217,6 +217,58 @@ unsigned char convert_to_ascii(int pos)
 
 	return a;
 }
+
+char[] ApplyOCR(Matrix images, int length)
+{
+    size_t i = 0;
+    size_t j = 0;
+    Network net = LoadNetwork();
+    char str[length / 350];
+    size_t cpt_matrix = 0;
+    Matrix M = init_matrix_zero(625, 1);
+
+    while (i < length)
+    {
+        if (*(images.pt + i) == -2)
+        {
+            str[j] = " ";
+            j++;
+        }
+        else if (*(images.pt + i) == -3)
+        {
+            str[j] = "\n"; 
+            j++;
+        }
+        else if (*(images.pt + i) <= 1 && *(images.pt + i) >= 0)
+        {
+            if (cpt_matrix == 625)
+            {
+                //lancer OCR
+                feedforward(net, net.length);
+                StoreMatrix Outputs = *(net.pt_wbo+2);
+                Matrix O = *(Outputs.matrices + 2);
+                double b = max_M(O);
+
+                char fl[8];
+                sprintf(fl, "%lf", b);
+                strcat(str, fl);
+                j += 8;
+
+                //add le char retourne dans la string
+                cpt_matrix = 0;
+            }
+            else
+            {
+                *(M.pt + cpt_matrix) = *(images.pt + i);
+                cpt_matrix++;
+            }
+        }
+        i += 1;
+
+    }
+    return str;
+}
+
 
 
 
