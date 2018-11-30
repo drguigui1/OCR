@@ -15,7 +15,7 @@ Matrix init_matrix(int rows, int columns)
 	for (int i = 0; i < rows; i++)
 		for(int j = 0; j < columns; j++)
 		{
-			double r = generate_random(0, 1);
+			double r = generate_random(-1, 1);
 			*(M.pt + i*columns + j) = r;
 		}
 	return M;

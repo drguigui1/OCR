@@ -18,7 +18,7 @@ int main()
 	//init sizes = [2,3,1]
 	/*Matrix sizes = init_matrix(1, 3);
 	*(sizes.pt) = 2;
-	*(sizes.pt + 1) = 3;
+	*(sizes.pt + 1) = 50;
     *(sizes.pt + 2) = 1;
 
 	//Network net = LoadNetwork(sizes);
@@ -30,8 +30,8 @@ int main()
 	// OCR
 
 	Network net = CreateNetwork();
-	TrainNetwork(net, 10);
-	//TestNetwork(net);
+	TrainNetwork(net, 50000);
+	TestNetwork(net);
 
 	free_network(net);
     

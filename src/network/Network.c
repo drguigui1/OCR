@@ -87,6 +87,101 @@ void feedforward(Network net, int length)
 
 /*------------------------------*/
 
+/*Matrix backprop_on_last(Network net, Matrix Target, int length)
+{	
+	length = length;
+	StoreMatrix Weights = *(net.pt_wbo);
+	StoreMatrix Bias = *(net.pt_wbo + 1);
+	StoreMatrix Outputs = *(net.pt_wbo + 2);
+
+	Matrix O = copy_matrix(*(Outputs.matrices + 2));
+	Matrix O_1 = copy_matrix(*(Outputs.matrices + 1));
+	Matrix W = *(Weights.matrices + 1);
+	Matrix B = *(Bias.matrices + 1);
+
+	Matrix E1 = sub_matrix(O, Target);
+	apply_func(O, sigmoidprime);
+	Matrix E = hadamar_product(E1, O);
+
+	free(E1.pt);
+	free(O.pt);
+
+	Matrix A = transpose_matrix(O_1);
+	Matrix Uw1 = mult_matrix(E, A);
+	Matrix Ub1 = copy_matrix(E);
+
+	mult_by_doubl(Uw1, 0.3);
+	mult_by_doubl(Ub1, 0.3);
+
+	Matrix Uw = sub_matrix(W, Uw1);
+	Matrix Ub = sub_matrix(B, Ub1);
+	
+	free((Weights.matrices + 1)->pt);
+	free((Bias.matrices + 1)->pt);
+
+	*(Weights.matrices + 1) = Uw;
+	*(Bias.matrices + 1) = Ub;
+
+	free(A.pt);
+	free(O_1.pt);
+	free(Uw1.pt);
+	free(Ub1.pt);
+
+	return E;
+
+}
+
+void backprop_on_hidden(Network net, Matrix ErrorLast, int length)
+{
+	
+	length = length;
+	StoreMatrix Weights = *(net.pt_wbo);
+	StoreMatrix Bias = *(net.pt_wbo + 1);
+	StoreMatrix Outputs = *(net.pt_wbo + 2);
+
+	Matrix O = copy_matrix(*(Outputs.matrices + 1));
+	Matrix O_1 = copy_matrix(*(Outputs.matrices));
+	Matrix W = *(Weights.matrices);
+	Matrix W1 = copy_matrix(*(Weights.matrices + 1));
+	Matrix B = *(Bias.matrices);
+	///
+
+	Matrix T = transpose_matrix(W1);
+	apply_func(O, sigmoidprime);
+	Matrix E1 = hadamar_product(ErrorLast, O);
+	Matrix E = mult_matrix(T, E1);
+
+	free(W1.pt);
+	free(E1.pt);
+	free(T.pt);
+	free(O.pt);
+
+	///
+	Matrix A = transpose_matrix(O_1);
+	Matrix Uw1 = mult_matrix(E, A);
+	Matrix Ub1 = copy_matrix(E);
+
+	mult_by_doubl(Uw1, 0.1);
+	mult_by_doubl(Ub1, 0.1);
+
+	Matrix Uw = sub_matrix(W, Uw1);
+	Matrix Ub = sub_matrix(B, Ub1);
+
+	free((Weights.matrices)->pt);
+	free((Bias.matrices)->pt);
+
+	*(Weights.matrices) = Uw;
+	*(Bias.matrices) = Ub;
+	////
+
+	free(E.pt);
+	free(A.pt);
+	free(O_1.pt);
+	free(Uw1.pt);
+	free(Ub1.pt);
+
+}*/
+
 //call this function with a copy of Output
 Matrix error_last_layer(Matrix Target, Matrix Output)
 {
@@ -149,17 +244,17 @@ Matrix backprop_on_last(Network net, Matrix Target, int length)
 	//printf("|---Error----|\n");
 	//print_matrix(Error);
 
-	Matrix Sgd = SGD(O, Error, 0.25);//learning rate error
+	Matrix Sgd = SGD(O, Error, 0.1);//learning rate error
 	Matrix Delt = delta(Sgd, O_l_1);
 	//weights update
-	W = add_matrix(W, Delt);
+	Matrix W1 = add_matrix(W, Delt);
 	free((Weights.matrices + length-2)->pt);
-	*(Weights.matrices + length-2) = W;
+	*(Weights.matrices + length-2) = W1;
 	//bias update
-	B = add_matrix(B, Sgd);
+	Matrix B1 = add_matrix(B, Sgd);
 
 	free((Bias.matrices + length-2)->pt);
-	*(Bias.matrices + length-2) = B;
+	*(Bias.matrices + length-2) = B1;
 	free(Sgd.pt);
 	free(Delt.pt);
 
@@ -188,20 +283,20 @@ void backprop_on_hidden(Network net, Matrix Errorlast, int length)
 		Matrix W = *(Weights.matrices + i-1);
 		Matrix B = *(Bias.matrices + i-1);
 		Error = error_hidden(Wl1, Error);
-		Matrix Sgd = SGD(O, Error, 0.4);
+		Matrix Sgd = SGD(O, Error, 0.1);
 
 		Matrix Delt = delta(Sgd, O_l_1);
 		//updare weights/bias
-		W = add_matrix(W, Delt);
-		B = add_matrix(B, Sgd);
+		Matrix W1 = add_matrix(W, Delt);
+		Matrix B1 = add_matrix(B, Sgd);
 		
 
 		/* FREE */
 		free((Weights.matrices + i-1)->pt);
 		free((Bias.matrices + i-1)->pt);
 		
-		*(Weights.matrices + i-1) = W;
-		*(Bias.matrices + i-1) = B;
+		*(Weights.matrices + i-1) = W1;
+		*(Bias.matrices + i-1) = B1;
 
 		free(Delt.pt);
 		free(Sgd.pt);

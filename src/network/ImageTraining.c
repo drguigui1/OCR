@@ -26,16 +26,8 @@ Matrix GetImage(char path[], int img_number)
 	for (int i = 0; i < M.rows; i++)
 	{
 		for (int j = 0; j < M.columns; j++)
-		{
-			
-				if (*(M.pt + i*M.columns + j) == 255)
-				{	
-					*(M.pt + i*M.columns + j) = 0;
-				}
-				else
-				{
-					*(M.pt + i*M.columns + j) = 1;
-				}
+		{	
+			*(M.pt + i*M.columns + j) /= 255;
 		}
 	}
 	return M;
@@ -58,6 +50,7 @@ int GetLabel(char path[], int label_number)
 		char label = fgetc(file);
 		//printf("%c\n", label);
 		
+
 		if (47 < label && label < 58)
 			target = label - 48;
 		else if (64 < label && label < 91)
@@ -80,218 +73,6 @@ int GetLabel(char path[], int label_number)
 		errx(1, "ERROR while opening file in SaveData\n");
 }
 
-
-Matrix test(int r) //0 et 1
-{
-	Matrix A = init_matrix(17, 1);
-
-	if (r == 0)
-	{
-	*(A.pt     ) = 0;
-	*(A.pt + 1 ) = 1;
-	*(A.pt + 2 ) = 0;
-	*(A.pt + 3 ) = 1;
-	*(A.pt + 4 ) = 0;
-	*(A.pt + 5 ) = 1;
-	*(A.pt + 6 ) = 0;
-	*(A.pt + 7 ) = 1;
-	*(A.pt + 8 ) = 0;
-	*(A.pt + 9 ) = 1;
-	*(A.pt + 10) = 0;
-	*(A.pt + 11) = 1;
-	*(A.pt + 12) = 0;
-	*(A.pt + 13) = 1;
-	*(A.pt + 14) = 0;
-	*(A.pt + 15) = 1;
-	*(A.pt + 16) = 0;
-	}
-	else if (r == 1)
-	{
-	*(A.pt     ) = 0;
-	*(A.pt + 1 ) = 1;
-	*(A.pt + 2 ) = 0;
-	*(A.pt + 3 ) = 0;
-	*(A.pt + 4 ) = 0;
-	*(A.pt + 5 ) = 0;
-	*(A.pt + 6 ) = 0;
-	*(A.pt + 7 ) = 0;
-	*(A.pt + 8 ) = 0;
-	*(A.pt + 9 ) = 0;
-	*(A.pt + 10) = 0;
-	*(A.pt + 11) = 0;
-	*(A.pt + 12) = 0;
-	*(A.pt + 13) = 0;
-	*(A.pt + 14) = 0;
-	*(A.pt + 15) = 1;
-	*(A.pt + 16) = 0;
-	}
-	else if (r == 2)
-	{
-	*(A.pt     ) = 0;
-	*(A.pt + 1 ) = 1;
-	*(A.pt + 2 ) = 0;
-	*(A.pt + 3 ) = 0;
-	*(A.pt + 4 ) = 0;
-	*(A.pt + 5 ) = 0;
-	*(A.pt + 6 ) = 0;
-	*(A.pt + 7 ) = 0;
-	*(A.pt + 8 ) = 0;
-	*(A.pt + 9 ) = 0;
-	*(A.pt + 10) = 0;
-	*(A.pt + 11) = 0;
-	*(A.pt + 12) = 0;
-	*(A.pt + 13) = 0;
-	*(A.pt + 14) = 0;
-	*(A.pt + 15) = 1;
-	*(A.pt + 16) = 1;
-	}
-	else if (r == 3)
-	{
-	*(A.pt     ) = 0;
-	*(A.pt + 1 ) = 1;
-	*(A.pt + 2 ) = 0;
-	*(A.pt + 3 ) = 0;
-	*(A.pt + 4 ) = 0;
-	*(A.pt + 5 ) = 0;
-	*(A.pt + 6 ) = 0;
-	*(A.pt + 7 ) = 0;
-	*(A.pt + 8 ) = 0;
-	*(A.pt + 9 ) = 0;
-	*(A.pt + 10) = 0;
-	*(A.pt + 11) = 0;
-	*(A.pt + 12) = 0;
-	*(A.pt + 13) = 0;
-	*(A.pt + 14) = 1;
-	*(A.pt + 15) = 1;
-	*(A.pt + 16) = 1;
-	}
-	else if (r == 4)
-	{
-	*(A.pt     ) = 0;
-	*(A.pt + 1 ) = 1;
-	*(A.pt + 2 ) = 0;
-	*(A.pt + 3 ) = 0;
-	*(A.pt + 4 ) = 0;
-	*(A.pt + 5 ) = 0;
-	*(A.pt + 6 ) = 0;
-	*(A.pt + 7 ) = 0;
-	*(A.pt + 8 ) = 0;
-	*(A.pt + 9 ) = 0;
-	*(A.pt + 10) = 0;
-	*(A.pt + 11) = 0;
-	*(A.pt + 12) = 0;
-	*(A.pt + 13) = 1;
-	*(A.pt + 14) = 1;
-	*(A.pt + 15) = 1;
-	*(A.pt + 16) = 1;
-	}
-		else if (r == 5)
-	{
-	*(A.pt     ) = 0;
-	*(A.pt + 1 ) = 1;
-	*(A.pt + 2 ) = 0;
-	*(A.pt + 3 ) = 0;
-	*(A.pt + 4 ) = 0;
-	*(A.pt + 5 ) = 0;
-	*(A.pt + 6 ) = 0;
-	*(A.pt + 7 ) = 0;
-	*(A.pt + 8 ) = 0;
-	*(A.pt + 9 ) = 0;
-	*(A.pt + 10) = 0;
-	*(A.pt + 11) = 0;
-	*(A.pt + 12) = 1;
-	*(A.pt + 13) = 1;
-	*(A.pt + 14) = 1;
-	*(A.pt + 15) = 1;
-	*(A.pt + 16) = 1;
-	}
-		else if (r == 6)
-	{
-	*(A.pt     ) = 0;
-	*(A.pt + 1 ) = 1;
-	*(A.pt + 2 ) = 0;
-	*(A.pt + 3 ) = 0;
-	*(A.pt + 4 ) = 0;
-	*(A.pt + 5 ) = 0;
-	*(A.pt + 6 ) = 0;
-	*(A.pt + 7 ) = 0;
-	*(A.pt + 8 ) = 0;
-	*(A.pt + 9 ) = 0;
-	*(A.pt + 10) = 0;
-	*(A.pt + 11) = 1;
-	*(A.pt + 12) = 1;
-	*(A.pt + 13) = 1;
-	*(A.pt + 14) = 1;
-	*(A.pt + 15) = 1;
-	*(A.pt + 16) = 1;
-	}
-		else if (r == 7)
-	{
-	*(A.pt     ) = 0;
-	*(A.pt + 1 ) = 1;
-	*(A.pt + 2 ) = 0;
-	*(A.pt + 3 ) = 0;
-	*(A.pt + 4 ) = 0;
-	*(A.pt + 5 ) = 0;
-	*(A.pt + 6 ) = 0;
-	*(A.pt + 7 ) = 0;
-	*(A.pt + 8 ) = 0;
-	*(A.pt + 9 ) = 0;
-	*(A.pt + 10) = 1;
-	*(A.pt + 11) = 1;
-	*(A.pt + 12) = 1;
-	*(A.pt + 13) = 1;
-	*(A.pt + 14) = 1;
-	*(A.pt + 15) = 1;
-	*(A.pt + 16) = 1;
-	}
-		else if (r == 8)
-	{
-	*(A.pt     ) = 0;
-	*(A.pt + 1 ) = 1;
-	*(A.pt + 2 ) = 0;
-	*(A.pt + 3 ) = 0;
-	*(A.pt + 4 ) = 0;
-	*(A.pt + 5 ) = 0;
-	*(A.pt + 6 ) = 0;
-	*(A.pt + 7 ) = 0;
-	*(A.pt + 8 ) = 0;
-	*(A.pt + 9 ) = 1;
-	*(A.pt + 10) = 1;
-	*(A.pt + 11) = 1;
-	*(A.pt + 12) = 1;
-	*(A.pt + 13) = 1;
-	*(A.pt + 14) = 1;
-	*(A.pt + 15) = 1;
-	*(A.pt + 16) = 1;
-	}
-		else if (r == 9)
-	{
-	*(A.pt     ) = 0;
-	*(A.pt + 1 ) = 1;
-	*(A.pt + 2 ) = 0;
-	*(A.pt + 3 ) = 0;
-	*(A.pt + 4 ) = 0;
-	*(A.pt + 5 ) = 0;
-	*(A.pt + 6 ) = 0;
-	*(A.pt + 7 ) = 0;
-	*(A.pt + 8 ) = 1;
-	*(A.pt + 9 ) = 1;
-	*(A.pt + 10) = 1;
-	*(A.pt + 11) = 1;
-	*(A.pt + 12) = 1;
-	*(A.pt + 13) = 1;
-	*(A.pt + 14) = 1;
-	*(A.pt + 15) = 1;
-	*(A.pt + 16) = 1;
-	}
-	
-		
-
-	return A;
-
-}
-
 void TrainNetwork(Network net, int nb_it)
 {
 	
@@ -301,27 +82,29 @@ void TrainNetwork(Network net, int nb_it)
 
 	for (int i = 0; i < nb_it; i++)
 	{
-		int r = rand() % 10;
-		//char pathimage[100] = "../../img_train/";
-		//char pathlabel[100] = "../../label_train/";
+		//int r = rand() % 10;
+		//int r = 0;
+		char pathimage[100] = "../../img_train/";
+		char pathlabel[100] = "../../label_train/";
 
-		//int r = rand() % 1000;
+		int r = rand() % 10000;
 		//printf("\n R -> %d\n", r);
 
-		//Matrix image = GetImage(pathimage, r);
-		//image.rows *= image.columns;
-		//image.columns = 1;
+		Matrix image = GetImage(pathimage, r);
+		image.rows *= image.columns;
+		image.columns = 1;
 
-		Matrix image = test(r);
+		//Matrix image = test(r);
 		
         *(Outputs.matrices) = image;
 		
-		//int label = GetLabel(pathlabel, r);
-		
-		Matrix Target = init_matrix_zero(76, 1);
-		*(Target.pt + /*label*/r) = 1;
-		print_matrix(Target);
-		printf("\n");
+		int label = GetLabel(pathlabel, r);
+		//printf("\n%d\n", label);
+
+		Matrix Target = init_matrix_zero(10, 1);
+		*(Target.pt + label/*r*/) = 1;
+		//print_matrix(Target);
+		//printf("\n");
 
 		feedforward(net, length);
 		Matrix Error = backprop_on_last(net, Target, length);
@@ -331,24 +114,24 @@ void TrainNetwork(Network net, int nb_it)
 		//print_matrix(Error);
 		if (i == 0 || i == nb_it-1 || i == nb_it-2)
 		{
-			//printf("\n----NETWORK----%d\n", i);
-			//print_network(net, net.length);
+			printf("\n----NETWORK----%d\n", i);
+			printf("\n---%d---\n", label);
+			print_network(net, net.length);
 		}
 		free(image.pt);
         free(Error.pt);
 		free(Target.pt);
 		//printf("%d\n", i);
 	}
-	*(Outputs.matrices) = init_matrix_zero(17 , 1);
-
+	*(Outputs.matrices) = init_matrix_zero(625 , 1);
 }
 
 void TestNetwork(Network net)
 {
 	int length = net.length;
 	StoreMatrix Outputs = *(net.pt_wbo + 2);
-    
-	for (int i = 0; i < 10; i++)
+    int c = 0; 
+	for (int i = 0; i < 500; i++)
 	{
 	    char pathimage[100] = "../../img_test/";
 	    char pathlabel[100] = "../../label_test/";
@@ -366,20 +149,24 @@ void TestNetwork(Network net)
 		int label = GetLabel(pathlabel, i);
 		unsigned char c_lab = convert_to_ascii(label);
 		
+		if (c_out == c_lab)
+			c++;
+
 		printf("RESULT -> %c\n", c_out);
 		printf("LABEL  -> %c\n", c_lab);
 
         //free(image.pt);
 	}
+	printf("%d", c);
 }
 
 //good
 Network CreateNetwork()
 {
 	Matrix sizes = init_matrix_zero(1, 3);
-	*(sizes.pt) = /*625*/17;
+	*(sizes.pt) = 625/*17*/;
 	*(sizes.pt + 1) = 30;
-	*(sizes.pt + 2) = 76;
+	*(sizes.pt + 2) = /*76*/10;
 
 	Network net = init_all(sizes, 3);
 
@@ -412,7 +199,7 @@ unsigned char convert_to_ascii(int pos)
 	if (0 <= pos && pos <= 9)                                           
     	a = pos + 48;                                                
     else if (10 <= pos && pos <= 35)                                      
-    	a = pos + 55;                                                
+    	a = pos + 55;  
     else if (36 <= pos && pos <= 61)                                     
         a = pos + 61;                                                
     else if (pos == 62 || pos == 63)                                    
@@ -427,6 +214,7 @@ unsigned char convert_to_ascii(int pos)
     {
     	errx(1, "ERROR CONVERT TO ASCII");
     }
+
 	return a;
 }
 
