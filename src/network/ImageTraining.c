@@ -26,7 +26,15 @@ Matrix GetImage(char path[], int img_number)
 	{
 		for (int j = 0; j < M.columns; j++)
 		{	
-			*(M.pt + i*M.columns + j) /= 255;
+			if (*(M.pt + i*M.columns + j) == 255)
+			{
+				*(M.pt + i*M.columns + j) = 1;
+			}
+			else
+			{
+				*(M.pt + i*M.columns + j) = 0;
+			}
+		//	*(M.pt + i*M.columns + j) /= 255;
 		}
 	}
 	return M;
@@ -129,12 +137,13 @@ void TestNetwork(Network net)
 	int length = net.length;
 	StoreMatrix Outputs = *(net.pt_wbo + 2);
     int c = 0; 
-	for (int i = 0; i < 500; i++)
+	for (int i = 0; i < 1000; i++)
 	{
+		int j = rand() % 1000;
 	    char pathimage[100] = "../../img_test/";
 	    char pathlabel[100] = "../../label_test/";
 
-		Matrix image = GetImage(pathimage, i);
+		Matrix image = GetImage(pathimage, j);
 		image.rows *= image.columns;
 		image.columns = 1;
         free((Outputs.matrices)->pt);
@@ -144,7 +153,7 @@ void TestNetwork(Network net)
 		int out = max_M(*(Outputs.matrices + 2));
 		unsigned char c_out = convert_to_ascii(out);
 
-		int label = GetLabel(pathlabel, i);
+		int label = GetLabel(pathlabel, j);
 		unsigned char c_lab = convert_to_ascii(label);
 		
 		if (c_out == c_lab)

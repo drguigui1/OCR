@@ -30,15 +30,15 @@ int main()
 	// OCR
 
 	//Network net = CreateNetwork();
-	//TrainNetwork(net, 50000);
+	//TrainNetwork(net, 10000);
 	//TestNetwork(net);
 	//SaveNetwork(net);
 	
-	//Network net = LoadNetwork();
-	//print_network(net, 3);
-	//TestNetwork(net);
+	Network net = LoadNetwork();
+	print_network(net, 3);
+	TestNetwork(net);
 
-	//free_network(net);
+	free_network(net);
     
 	// TEST
 
@@ -57,9 +57,9 @@ int main()
 	free_network(net);
 */
 
-	char* st = xor_f(1, 0);
-	printf("X1:1, X2:1\n");
-	st = st;
+	//char* st = xor_f(1, 0);
+	//printf("X1:1, X2:1\n");
+	//st = st;
 
 	return 0;
 
