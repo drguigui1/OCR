@@ -1,21 +1,23 @@
 # Makefile
 
-CC = gcc -fsanitize=address 
-CPPFLAGS = -MMD
-CFLAGS = -Wall -Wextra -std=c99 -O0 -lm -g -lSDL -lSDL_image 
-LDFLAGS =
-LDLIBS = -lm -lSDL -lSDL_image 
+CC=gcc #-fsanitize=address
+CPPFLAGS= -MMD -D_XOPEN_SOURCE=500
+CFLAGS= -Wall -Wextra -std=c99 -O2 -g -lm -lSDL -lSDL_image `pkg-config --cflags --libs gtk+-2.0`
+LDFLAGS= -fsanitize=address
+LDLIBS= -lm -lSDL -lSDL_image `pkg-config --cflags --libs gtk+-2.0`
 
-OBJ = convert.o Image_Func.o ImageTraining.o MathForOcr.o Matrix.o Network.o xor.o SaveAndLoad.o main.o 
-DEP = ${OBJ:.o=.d}
+SRC= xor.c MathForOcr.c Matrix.c Network.c ImageTraining.c convert.c Image_Func.c SaveAndLoad.c main.c
+OBJ= ${SRC:.c=.o}
+DEP= ${SRC:.c=.d}
 
 all: main
+
+-include ${DEP}
 
 main: ${OBJ}
 
 clean:
-	${RM} ${OBJ} ${DEP} main
-
--include ${DEP}
+	rm -f ${OBJ} ${DEP} main
 
 # END
+

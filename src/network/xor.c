@@ -123,12 +123,11 @@ void xor(Matrix sizes)
         //free(Input.pt);
      }
      print_network(net, net.length);
-     SaveNetwork(net);
      free_network(net);
 
 }
 
-void xor_f(int p1, int p2, char out[])
+double xor_f(int p1, int p2)
 {
 
 	//sizes = [2, 3, 1]
@@ -221,11 +220,10 @@ void xor_f(int p1, int p2, char out[])
 
     Matrix O = *(Out.matrices + 2);
     double b = *(O.pt);
-    snprintf(out, 50, "%f", b); 
     free_network(net);
     free(sizes.pt);
     //!!!!prob sur le retour
-
+    return b;
 
 }
 

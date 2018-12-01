@@ -71,9 +71,10 @@ int GetLabel(char path[], int label_number)
 			target = label + 24;
 		else if (90 < label && label < 96)
 			target = label - 20;
-
-		fclose(file);
-		return target; 
+        else
+            target = 0;
+        fclose(file);
+		return target;
 	}
 	else 
 		errx(1, "ERROR while opening file in SaveData\n");
@@ -306,6 +307,51 @@ Matrix SimulateSeg()
     return M;
 }
 
+
+void ApplyOCR2(char path[], char st[])
+{
+    Matrix sizes = init_matrix(1, 3);
+    *(sizes.pt) = 625;
+    *(sizes.pt + 1) = 30;
+    *(sizes.pt + 2) = 10;
+    Network net = LoadNetwork(sizes);
+    //lancer OCR
+
+    //--------------
+
+    SDL_Surface* img = load_image(path);
+	Matrix M = img_to_matrix(img);
+	SDL_FreeSurface(img);
+	for (int i = 0; i < M.rows; i++)
+	{
+		for (int j = 0; j < M.columns; j++)
+		{	
+			if (*(M.pt + i*M.columns + j) == 255)
+			{
+				*(M.pt + i*M.columns + j) = 1;
+			}
+			else
+			{
+				*(M.pt + i*M.columns + j) = 0;
+			}
+		}
+	}
+
+    M.rows *= M.columns;
+    M.columns = 1;
+    //--------------
+
+    StoreMatrix Outputs = *(net.pt_wbo+2);
+    *(Outputs.matrices) = M; 
+    feedforward(net, net.length);
+    Matrix O = *(Outputs.matrices + 2);
+
+    char c = convert_to_ascii(max_M(O));
+    free_network(net);
+    free(sizes.pt);
+    st[0] = c;
+
+}
 
 
 
