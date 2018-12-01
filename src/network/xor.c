@@ -128,7 +128,7 @@ void xor(Matrix sizes)
 
 }
 
-char* xor_f(int p1, int p2)
+void xor_f(int p1, int p2, char out[])
 {
 
 	//sizes = [2, 3, 1]
@@ -220,16 +220,10 @@ char* xor_f(int p1, int p2)
     Out = *(net.pt_wbo + 2);
 
     Matrix O = *(Out.matrices + 2);
-    print_matrix(O);
     double b = *(O.pt);
-    printf("%lf\n", b);
-    char s[100] = "";
-    sprintf(s, "%lf", b); 
-
+    snprintf(out, 50, "%f", b); 
     free_network(net);
     free(sizes.pt);
-    char* p = s;
-    return p;
     //!!!!prob sur le retour
 
 

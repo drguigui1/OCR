@@ -225,12 +225,15 @@ unsigned char convert_to_ascii(int pos)
 	return a;
 }
 
-char* ApplyOCR(Matrix images, int length)
+void ApplyOCR(Matrix images, int length, char str[])
 {
     int i = 0;
     int j = 0;
-    Network net = LoadNetwork();
-    char* str = malloc(length / 350 * sizeof(char));
+    Matrix sizes = init_matrix(1, 3);
+    *(sizes.pt) = 625;
+    *(sizes.pt + 1) = 30;
+    *(sizes.pt + 2) = 10;
+    Network net = LoadNetwork(sizes);
     size_t cpt_matrix = 0;
     Matrix M = init_matrix_zero(625, 1);
 
@@ -238,12 +241,12 @@ char* ApplyOCR(Matrix images, int length)
     {
         if (*(images.pt + i) == -2)
         {
-            *(str+j) = ' ';
+            str[j] = ' ';
             j++;
         }
         else if (*(images.pt + i) == -3)
         {
-            *(str+j) = '\n'; 
+            str[j] = '\n'; 
             j++;
         }
         else if (*(images.pt + i) <= 1 && *(images.pt + i) >= 0)
@@ -251,16 +254,18 @@ char* ApplyOCR(Matrix images, int length)
             if (cpt_matrix == 625)
             {
                 //lancer OCR
-                feedforward(net, net.length);
                 StoreMatrix Outputs = *(net.pt_wbo+2);
+                *(Outputs.matrices) = M; 
+                feedforward(net, net.length);
                 Matrix O = *(Outputs.matrices + 2);
 
                 char c = convert_to_ascii(max_M(O));
-                *(str+j) = c;
+                str[j] = c;
                 j++;
 
                 //add le char retourne dans la string
                 cpt_matrix = 0;
+                
             }
             else
             {
@@ -269,9 +274,36 @@ char* ApplyOCR(Matrix images, int length)
             }
         }
         i += 1;
-
     }
-    return str;
+    free_network(net);
+    free(sizes.pt);
+}
+
+Matrix SimulateSeg()
+{
+    Matrix M = init_matrix_zero(1891, 1);
+    int p = 0;
+
+    for (int i = 0; i < 3; i++)
+    {
+        char pathimage[100] = "../../img_test/";
+	    char pathlabel[100] = "../../label_test/";
+
+        Matrix image = GetImage(pathimage, i);
+        printf("P->%d\n", p);
+        *(M.pt + p) = 10; //pos du chr
+        p++;
+        for (int j = 0; j < image.rows; j++)
+        {
+            for (int k = 0; k < image.columns; k++)
+                *(M.pt + j*image.columns + k + p) = *(image.pt + j*image.columns + k);
+        }
+        printf("%d", GetLabel(pathlabel, i));
+        free(image.pt);
+        p += 626;
+    }
+    printf("\n");
+    return M;
 }
 
 

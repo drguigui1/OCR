@@ -88,9 +88,9 @@ StoreMatrix LoadData(DataType type)
 					free(s);
 				}
 			}
-			*(M.matrices + i) = m;			
+			*(M.matrices + i) = m;
+            
 		}
-
 		fclose(file);
 		return M;
 
@@ -124,7 +124,7 @@ StoreMatrix LoadData(DataType type)
 				}
 			}
 			*(M.matrices + i) = m;			
-		}
+        }
 		fclose(file);
 		return M;
 	}

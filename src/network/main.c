@@ -30,15 +30,24 @@ int main()
 	// OCR
 
 	//Network net = CreateNetwork();
-	//TrainNetwork(net, 10000);
+	//TrainNetwork(net, 50000);
 	//TestNetwork(net);
 	//SaveNetwork(net);
 	
-	Network net = LoadNetwork();
-	print_network(net, 3);
-	TestNetwork(net);
-
-	free_network(net);
+	//Network net = LoadNetwork();
+	//print_network(net, 3);
+	//TestNetwork(net);
+	//free_network(net);
+    
+    Matrix M = SimulateSeg();
+    print_matrix(M);
+    char s[100] = "";
+    ApplyOCR(M, 1891, s);
+    free(M.pt);
+    
+    /*char s[100];
+    xor_f(0, 0, s);
+    printf("%s", s);*/
     
 	// TEST
 

@@ -4,6 +4,6 @@
 #include "Matrix.h"
 
 void xor(Matrix sizes);
-char* xor_f(int p1, int p2);
+void xor_f(int p1, int p2, char out[]);
 
 #endif
