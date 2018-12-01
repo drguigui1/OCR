@@ -10,7 +10,7 @@
 #include "Matrix.h"
 #include "convert.h"
 #include "Image_Func.h"
-
+#include "SaveAndLoad.h"
 
 //good
 Matrix GetImage(char path[], int img_number)
@@ -22,7 +22,6 @@ Matrix GetImage(char path[], int img_number)
 	SDL_Surface* img = load_image(path);
 	Matrix M = img_to_matrix(img);
 	SDL_FreeSurface(img);
-	//printf("%s\n", img_name);
 	for (int i = 0; i < M.rows; i++)
 	{
 		for (int j = 0; j < M.columns; j++)
@@ -48,7 +47,6 @@ int GetLabel(char path[], int label_number)
 	{
 		int target;
 		char label = fgetc(file);
-		//printf("%c\n", label);
 		
 
 		if (47 < label && label < 58)
@@ -218,12 +216,12 @@ unsigned char convert_to_ascii(int pos)
 	return a;
 }
 
-/*char* ApplyOCR(Matrix images, int length)
+char* ApplyOCR(Matrix images, int length)
 {
-    size_t i = 0;
-    size_t j = 0;
+    int i = 0;
+    int j = 0;
     Network net = LoadNetwork();
-    char str[length / 350];
+    char* str = malloc(length / 350 * sizeof(char));
     size_t cpt_matrix = 0;
     Matrix M = init_matrix_zero(625, 1);
 
@@ -231,12 +229,12 @@ unsigned char convert_to_ascii(int pos)
     {
         if (*(images.pt + i) == -2)
         {
-            str[j] = " ";
+            *(str+j) = ' ';
             j++;
         }
         else if (*(images.pt + i) == -3)
         {
-            str[j] = "\n"; 
+            *(str+j) = '\n'; 
             j++;
         }
         else if (*(images.pt + i) <= 1 && *(images.pt + i) >= 0)
@@ -247,12 +245,10 @@ unsigned char convert_to_ascii(int pos)
                 feedforward(net, net.length);
                 StoreMatrix Outputs = *(net.pt_wbo+2);
                 Matrix O = *(Outputs.matrices + 2);
-                double b = max_M(O);
 
-                char fl[8];
-                sprintf(fl, "%lf", b);
-                strcat(str, fl);
-                j += 8;
+                char c = convert_to_ascii(max_M(O));
+                *(str+j) = c;
+                j++;
 
                 //add le char retourne dans la string
                 cpt_matrix = 0;
@@ -267,7 +263,7 @@ unsigned char convert_to_ascii(int pos)
 
     }
     return str;
-}*/
+}
 
 
 
