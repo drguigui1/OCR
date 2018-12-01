@@ -34,11 +34,11 @@ int main()
 	//TestNetwork(net);
 	//SaveNetwork(net);
 	
-	Network net = LoadNetwork();
-	print_network(net, 3);
-	TestNetwork(net);
+	//Network net = LoadNetwork();
+	//print_network(net, 3);
+	//TestNetwork(net);
 
-	free_network(net);
+	//free_network(net);
     
 	// TEST
 
@@ -56,6 +56,10 @@ int main()
 	free(Target.pt);
 	free_network(net);
 */
+
+	char* st = xor_f(1, 1);
+	printf("%s\n", st);
+	
 	return 0;
 
 }

@@ -43,7 +43,7 @@ void xor(Matrix sizes)
     *(label2.pt) = 1;                                                                                                                                                                                                                                                      
     *(label3.pt) = 1;                                                                                                                                                                                                                                                      
     *(label4.pt) = 0;                                                                                                                                                                                                                                                      
-                                                                                                                                                                                                                                                                               
+
     StoreMatrix LABEL = init_StoreMatrix(4);                                                                                                                                                                                                                               
     *(LABEL.matrices) = label1;                                                                                                                                                                                                                                            
     *(LABEL.matrices+1) = label2;                                                                                                                                                                                                                                          
@@ -67,8 +67,6 @@ void xor(Matrix sizes)
      	int r = rand();
         r = r%4;
         Input1 = *(XOR.matrices + r);
-
-
         *(Outputs.matrices) = Input1;
 
         //feedforward
@@ -130,8 +128,15 @@ void xor(Matrix sizes)
 
 }
 
-char[] xor_f(int p1, int p2)
+char* xor_f(int p1, int p2)
 {
+
+	//sizes = [2, 3, 1]
+	Matrix sizes = init_matrix(1, 3);
+	*(sizes.pt) = 2;
+	*(sizes.pt + 1) = 3;
+	*(sizes.pt + 2) = 1;
+	
 	Matrix xor1 = init_matrix(2,1); 
     Matrix xor2 = init_matrix(2,1); 
     Matrix xor3 = init_matrix(2,1); 
@@ -183,7 +188,7 @@ char[] xor_f(int p1, int p2)
 
 	Matrix Input1;
 
-	for (int k = 0; k < 30000; k++)
+	for (int k = 0; k < 20000; k++)
     {
      	int r = rand();
         r = r%4;
@@ -198,6 +203,7 @@ char[] xor_f(int p1, int p2)
         Matrix Error = backprop_on_last(net, *(LABEL.matrices + r), length);
         backprop_on_hidden(net, Error, length);
         free(Error.pt); 
+        print_network(net, net.length);
     }
      
      free(Input1.pt);
@@ -207,18 +213,22 @@ char[] xor_f(int p1, int p2)
     *(Input.pt) = p1;
     *(Input.pt + 1) = p2; 
 
-    StoreMatrix O = *(net.pt_wbo + 2);
-    *(O.matrices) = Input;
+    StoreMatrix Out = *(net.pt_wbo + 2);
+    *(Out.matrices) = Input;
 
     feedforward(net, length);
-    O = *(net.pt_wbo + 2);
+    Out = *(net.pt_wbo + 2);
 
+    Matrix O = *(Out.matrices + 2);
+    print_matrix(O);
     double b = *(O.pt);
-    char s[8] = "";
+    char s[100] = "";
     sprintf(s, "%lf", b); 
 
     free_network(net);
-    return s;
+    free(sizes.pt);
+    char* p = s;
+    return p;
 
 
 }
