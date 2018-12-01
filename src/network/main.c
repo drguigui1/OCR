@@ -18,7 +18,7 @@ int main()
 	//init sizes = [2,3,1]
 	/*Matrix sizes = init_matrix(1, 3);
 	*(sizes.pt) = 2;
-	*(sizes.pt + 1) = 50;
+	*(sizes.pt + 1) = 10;
     *(sizes.pt + 2) = 1;
 
 	//Network net = LoadNetwork(sizes);
@@ -57,9 +57,10 @@ int main()
 	free_network(net);
 */
 
-	char* st = xor_f(1, 1);
-	printf("%s\n", st);
-	
+	char* st = xor_f(1, 0);
+	printf("X1:1, X2:1\n");
+	st = st;
+
 	return 0;
 
 }

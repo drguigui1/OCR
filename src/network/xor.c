@@ -62,7 +62,7 @@ void xor(Matrix sizes)
 
 	Matrix Input1;
 
-	for (int k = 0; k < 30000; k++)
+	for (int k = 0; k < 20000; k++)
     {
      	int r = rand();
         r = r%4;
@@ -134,7 +134,7 @@ char* xor_f(int p1, int p2)
 	//sizes = [2, 3, 1]
 	Matrix sizes = init_matrix(1, 3);
 	*(sizes.pt) = 2;
-	*(sizes.pt + 1) = 3;
+	*(sizes.pt + 1) = 10;
 	*(sizes.pt + 2) = 1;
 	
 	Matrix xor1 = init_matrix(2,1); 
@@ -188,7 +188,7 @@ char* xor_f(int p1, int p2)
 
 	Matrix Input1;
 
-	for (int k = 0; k < 20000; k++)
+	for (int k = 0; k < 50000; k++)
     {
      	int r = rand();
         r = r%4;
@@ -203,7 +203,7 @@ char* xor_f(int p1, int p2)
         Matrix Error = backprop_on_last(net, *(LABEL.matrices + r), length);
         backprop_on_hidden(net, Error, length);
         free(Error.pt); 
-        print_network(net, net.length);
+        //print_network(net, net.length);
     }
      
      free(Input1.pt);
@@ -222,6 +222,7 @@ char* xor_f(int p1, int p2)
     Matrix O = *(Out.matrices + 2);
     print_matrix(O);
     double b = *(O.pt);
+    printf("%lf\n", b);
     char s[100] = "";
     sprintf(s, "%lf", b); 
 
@@ -229,6 +230,7 @@ char* xor_f(int p1, int p2)
     free(sizes.pt);
     char* p = s;
     return p;
+    //!!!!prob sur le retour
 
 
 }
