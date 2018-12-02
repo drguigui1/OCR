@@ -337,7 +337,6 @@ void Print_Text (GtkWidget * button, gpointer data)
 	*(sizes.pt + 2) = 10;
 
 	Network net = LoadNetwork(sizes);
-	print_network(net, net.length);
 	/////////////////////////////////
 
     button = button;

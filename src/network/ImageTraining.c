@@ -90,29 +90,22 @@ void TrainNetwork(Network net, int nb_it)
 
 	for (int i = 0; i < nb_it; i++)
 	{
-		//int r = rand() % 10;
-		//int r = 0;
 		char pathimage[100] = "../../img_train/";
 		char pathlabel[100] = "../../label_train/";
 
 		int r = rand() % 10000;
-		//printf("\n R -> %d\n", r);
 
 		Matrix image = GetImage(pathimage, r);
 		image.rows *= image.columns;
 		image.columns = 1;
 
-		//Matrix image = test(r);
 		
         *(Outputs.matrices) = image;
 		
 		int label = GetLabel(pathlabel, r);
-		//printf("\n%d\n", label);
 
 		Matrix Target = init_matrix_zero(10, 1);
 		*(Target.pt + label/*r*/) = 1;
-		//print_matrix(Target);
-		//printf("\n");
 
 		feedforward(net, length);
 		Matrix Error = backprop_on_last(net, Target, length);
@@ -311,7 +304,6 @@ Matrix SimulateSeg()
 
 void ApplyOCR2(char path[], char st[], Network net)
 {
-	//print_network(net, net.length);
     //--------------
 
     SDL_Surface* img = load_image(path);
