@@ -1,30 +1,32 @@
 #ifndef TREE_H
 #define TREE_H
-#include "list.h"
+#include "List.h"
 
 typedef struct Node Node;
 typedef struct Tree Tree;
 
-
 struct Node
 {
-	List *key; 
-    	Node *child;
-	Node *sibling;
+  List *key; 
+  double pos;
+  Node *sibling;
+  Node *child;
+  
 };
- 
+
 
 struct Tree
 {         
-	Node *root;    
+  Node *root;    
 };
 
 Tree *init_t();
-Node *init_n(List *key);
+Node *init_n();
 void insert_sibling (Node *n, List *key);
 void insert_child (Node *n, List *key);
 List *get_node (Node *n);
 void print_tree(Node *n);
+int nb_children(Node *n);
 
 
 #endif

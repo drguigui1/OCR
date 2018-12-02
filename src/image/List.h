@@ -4,7 +4,7 @@
 typedef struct Element Element;
 struct Element
 {
-    int nombre;
+    int value;
     Element *next;
 };
 
@@ -15,14 +15,17 @@ struct List
 };
 
 List *initialisation();
+
 void insertion(List *list, int nvNombre);
-void suppression(List *list);
-void printlist(List *list, int jumpline);
 void insertion_n(List *list, int new, int place);
-int fromlist(List *list, int n);
 void suppression(List *list);
+void print_list(List *list, int jumpline);
+int fromlist(List *list, int n);
 void clean(List * list);
 int size(List *l);
 void copy(List *l1, List *l2);
+void merge(List *l1, List *l2);
+void swap(List *l, int a, int b);
+void fract(List *l);
 
 #endif

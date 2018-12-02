@@ -1,5 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include<stdio.h>
+#include<stdlib.h>
 
 // LISTES CHAINEES
 typedef struct Element Element;
@@ -47,7 +47,7 @@ void insertion(List *liste, int nvNombre)
     liste->first = nouveau;
 }
 
-void printlist(List *liste, int jumpline)
+void print_list(List *liste, int jumpline)
 {
     if (liste == NULL)
     {
@@ -94,31 +94,16 @@ int fromlist(List *liste, int n)
 void insertion_n(List *list, int new, int place)
 {
   int i = 0;
-  Element *node = malloc(sizeof(*node));
-
-  //verification good creation
-  if(list == NULL || node== NULL)
+  insertion(list, -2);
+  Element *curr = list -> first;
+  
+  for(i = 0; i < place && curr -> next -> value != -1; i++)
     {
-      exit(EXIT_FAILURE);
+      curr -> value = curr -> next -> value; 
+      curr = curr -> next;
     }
-  node -> value = new;
-
-  Element *actuel = list -> first;
-
-  //going to site
-  while(actuel != NULL && i<place)
-    {
-      actuel = actuel -> next;
-      i++;
-    }
-
-  //recreation of the links
-  node-> next = actuel;
-  if(actuel-> next != NULL)
-    {
-      actuel = actuel-> next;
-      node-> next = actuel;
-    }
+  if(i == place && curr -> value != -1)
+    curr -> value = new;
 }
 
 
@@ -139,7 +124,6 @@ void suppression(List *list)
 
 //remove all doublons from a list
 //create an other list and copy when new
-
 void clean(List *list)
 {
   //si liste nulle
@@ -209,3 +193,49 @@ void copy(List *l1, List *l2)
     }
 }
 
+//merge two lists
+void merge(List *l1, List *l2)
+{
+  if(l1 -> first -> value == -1)
+    {
+      l1 -> first = l2 -> first;
+    }
+  else if(l2 -> first -> value != -1 )
+    {
+      Element *el = l1 -> first;
+      
+      while(el -> next && el -> next -> value != -1)
+	{
+	  el = el -> next;
+	}
+      el -> next = l2 -> first;
+    }
+}
+
+void swap(List *l, int a, int b)
+{
+  Element *alpha = l -> first;
+  Element *beta = l -> first;
+  
+  for(int i = 0; i< a; i++)
+    {
+      alpha = alpha -> next;
+    }
+  
+  for(int i = 0; i< b; i++)
+    {
+      beta = beta -> next;
+    }
+
+  int curr = beta -> value;
+  beta -> value  = alpha -> value;
+  alpha -> value = curr;
+}
+
+void fract(List *l)
+{
+  while(fromlist(l,0) != -1)
+    {
+      suppression(l);
+    }
+}

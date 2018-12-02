@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include "Matrix.h"
-#include "list.h"
-#include "tree.h"
+#include "List.h"
+#include "Tree.h"
+#include <stdlib.h>
 
 typedef struct Vector2 Vector2;
 struct Vector2
@@ -9,6 +10,7 @@ struct Vector2
   int x;
   int y;
 };
+
 
 //--------------------------------------------------------------------//
 //--------------------------NEIGHBOURS--------------------------------//
@@ -20,24 +22,34 @@ struct Vector2
 //flag of the visited cell: -1
 
 
-void neighbours(Matrix array,List *actual,List *next,List *contrast,double base)
+void neighbours(Matrix array, List *actual, List *next, List *contrast, double base)
 {
+
+  
+  
   double cell = 0;
   
   //get coor
   //take number of columns
   int L = array.columns;
+  //int i = 0;
   
   Vector2 pos;
   pos.x = fromlist(actual,0)/L;
   pos.y = fromlist(actual,0)%L;
   suppression(actual);
 
-  
+  /*for(i = pos.x+pos.y*L; i<array.rows*array.columns && *(array.pt + i) != base; i++)
+    {
+      insertion(next, i);
+      *(array.pt + i) = -1;
+    }
 
   // printf("x: %d, y: %d\n",pos.x, pos.y);
 
- 
+  pos.x = i % L;
+  pos.y = i / L;*/
+  
   //up
   if(pos.x > 0)
     {
@@ -126,16 +138,24 @@ void blankless(Matrix array, List *list)
 
 
 void propa(Matrix array, List *curr, List *next, List *contrast)
-{ 
+{
+  //List *link = initialisation();
+
+  
+  
   int boucle = 1;
   double base = *(array.pt + fromlist(curr,0));
   
   while(boucle)
     {
+      //printf("turn \n");
+      
       while(fromlist(curr,0) != -1)
 	{
-	  //printf("boucle \n");
+	  
 	  neighbours(array, curr, next, contrast,base);
+	  //clean(next);
+	  printf(".");
 	}
       if(fromlist(next,0) == -1)
 	{
@@ -149,54 +169,81 @@ void propa(Matrix array, List *curr, List *next, List *contrast)
     }
 }
 
+//-----------------------------------------------------------//
+//--------------------Get-CHAR-------------------------------//
+//-----------------------------------------------------------//
 
+List *get_char(Matrix array, double pos)
+{
+  List *car = initialisation(); //list returned at the end
 
+  List *init = initialisation();
+  List *next = initialisation();
+  List *contrast = initialisation();
+
+  insertion(init, pos);
+  insertion(car, pos);
+ 
+  double base = *(array.pt + (int)pos);
+  
+  while(fromlist(init,0) != -1)
+    {
+      neighbours(array, init , next, contrast, base); //fuite memoire ??
+      clean(next);
+      init = next;
+      List *next2 = initialisation();
+      copy(next, next2);
+      merge(car, next2);
+    }
+
+  clean(car);
+  return car;
+}
+
+//-----------------------------------------------------------//
+//---------------------BUILD-WOODS---------------------------//
+//-----------------------------------------------------------//
 
 void build_woods(Matrix array, Node *father)
 {
-  List *init_contrast = initialisation();
-  copy(father -> key,init_contrast);
+
   
-  //can be usefull in presentation   
-  /* printf("father -> key\n");
-     printlist(father -> key,1);*/
+  List *init_contrast = initialisation();
+  copy(father -> key, init_contrast);
+
   
   if(fromlist(init_contrast,0) != -1)
     {
+
+      
       //initialisations
-      father -> child = init_n(initialisation()); //ERROR CORRECT
+      father -> child = init_n(); //ERROR CORRECT
 
       Node *son = father -> child; //position of son
+      
       List *curr = initialisation();
       List *next = initialisation();
       List *after_contrast = initialisation();
       
       insertion(curr, fromlist(init_contrast,0)); //1st coor of propa
-      
+      son -> pos = fromlist(init_contrast,0); //coor of propa on son node
+
       propa(array, curr, next, after_contrast); // propagation
-      clean (after_contrast); //remove twins
-
-
-      //can be usefull in oral
-      /*
-      printf("after_contrast\n");
-      printlist(after_contrast,1);*/
+      clean(after_contrast); //remove twins
 
       copy(after_contrast, son -> key);//attribution list
-      
       
       build_woods(array, son); //retry on son
       blankless(array, init_contrast); // cleaning the useless positions
 
-      
-      
        while(fromlist(init_contrast,0) != -1)
 	{
-	  son -> sibling  = init_n(initialisation()); //CORRECT ERROR
+	  son -> sibling  = init_n(); //CORRECT ERROR
 	  son = son -> sibling; //update current
+	  son -> pos = fromlist(init_contrast, 0);
 	  insertion(curr,fromlist(init_contrast,0)); //1st coor of propa
 	  propa(array, curr, next, son -> key); //propagation, filling son's key
-	  blankless(array,init_contrast); //cleqning contrast list
+	  blankless(array,init_contrast); //cleaning contrast list
 	  build_woods(array, son); //retry on son
 	  }
     }
@@ -212,6 +259,7 @@ void buildTree(Matrix array, Vector2 initpos, Tree *T)
   List *curr = initialisation();
   List *next = initialisation();
   List *contrast = initialisation();
+  //List *contrast2 = initialisation();
 
   double column = array.columns;
   
@@ -221,42 +269,94 @@ void buildTree(Matrix array, Vector2 initpos, Tree *T)
 
   //creating node
   Node *father = T -> root;
+  T -> root -> pos = initpos.y*column + initpos.x;
+  
   clean(contrast);
   
   copy(contrast, father -> key);
-  
+
   build_woods(array, father);
 }
 
-//-----------------------------------------------------------//
-//-------------------Print tree------------------------------//
-//-----------------------------------------------------------//
-
-void print_Tree(Node *n)
+//-----------------------------------------------//
+//--------------------WHITE-HOLE-----------------//
+//-----------------------------------------------//
+void white_holes(Node *n, double base, Matrix array)
 {
-	printf("(");;
-	printlist(n->key, 0);
-	if (n->child != NULL)
-	{
-		Node *c = n->child;
-		while (c != NULL)
-		{
-			print_tree(c);
-			c = c->sibling;
-		}
-	}
-	printf(")");
+  if(n && n -> child && !n -> child -> child)
+    {
 
+      if(!n -> child -> sibling &&  *(array.pt + (int)n -> child -> pos) == base)
+	{
+	  //printf("no sibling\n");
+	  free(n->child);
+	  n-> child = NULL;
+	}
+      else
+	if(
+	   *(array.pt + (int)n-> child -> pos) == base
+	   && *(array.pt + (int)n -> child -> sibling -> pos) == base
+	   && ! n -> child -> sibling -> sibling
+	   && ! n -> child -> sibling -> child)
+	  {
+	    //printf("with sibling\n");
+	   free(n -> child);
+	   n -> child = NULL;
+	}
+    }
 }
 
+//-----------------------------------------------//
+//-------------------REMOVE-HOLES----------------//
+//-----------------------------------------------//
+void _remove_holes(Node *n, Matrix array, double color)
+{
+  if(n)
+    {
+      white_holes(n,color, array);
+      color = *(array.pt + (int)n -> pos);
+      _remove_holes(n -> sibling, array, color);
+      _remove_holes(n-> child, array, color);
+    }
+}
+
+void remove_holes(Tree *t, Matrix array)
+{
+  double color = *(array.pt + (int)t -> root -> pos);
+  _remove_holes(t -> root -> child, array, color);
+  _remove_holes(t -> root -> sibling, array, color);
+}
+
+//-----------------------------------------------------------//
+//-------------------Binarisation----------------------------//
+//-----------------------------------------------------------//
 Tree *binarisation(Matrix array)
 {
   Vector2 zero; zero.x = 0; zero.y = 0;
   Tree *T = init_t();
-  Matrix work_on = copy_matrix(array); //create new matrix that can be destroyed
-
   
+  Matrix work_on = copy_Matrix(array); //create new matrix that can be destroyed
+  //printf("turn \n");
   buildTree(work_on, zero, T);
+  
+  remove_holes(T,array);
+  free(work_on.pt);
   return T;
-      
+}
+
+
+//-----------------------------------------------------------//
+//-------------------test------------------------------------//
+//-----------------------------------------------------------//
+void alpha()
+{
+  /*printf("alpha\n");
+  Tree *t = init_t();
+  Node *n = init_n();
+  t -> root -> child = init_n();
+  t -> root -> child -> child = init_n();
+  printf("is null: %i\n",t -> root -> child -> child == NULL);
+  print_tree(t -> root);
+  printf("\n");*/
+  printf("alpha");
 }

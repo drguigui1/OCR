@@ -1,8 +1,9 @@
 #ifndef BINARISATION_H
 #define BINARISATION_H
-#include "../utils/Matrix.h"
-#include "../utils/list.h"
-#include "../utils/tree.h"
+
+#include "Tree.h"
+#include "List.h"
+#include "Matrix.h"
 
 typedef struct Vector2 Vector2;
 struct Vector2
@@ -15,7 +16,16 @@ void neighbours(Matrix array, List *actual, List *next, List *contrast, double b
 void propa(Matrix array, List *curr, List *next, List *contrast);
 void build_woods(Matrix array, Node *father);
 void buildTree(Matrix array, Vector2 initpos, Tree *T);
-void print_Tree(Node *n);
 Tree *binarisation(Matrix array);
+
+void alpha();
+
+List *get_char(Matrix array,double pos);
+void blankless(Matrix array, List *list);
+
+void white_holes(Node *n, double base, Matrix array);
+void _remove_holes(Node *n, Matrix array, double color);
+void remove_holes(Tree *t, Matrix array);
+
 
 #endif
