@@ -10,23 +10,22 @@
 #include "ImageTraining.h"
 
 
-
 int main()
 {
 	srand(time(NULL));
 	//XOR
 	//init sizes = [2,3,1]
-	/*Matrix sizes = init_matrix(1, 3);
-	*(sizes.pt) = 2;
-	*(sizes.pt + 1) = 10;
-    *(sizes.pt + 2) = 1;
+	Matrix sizes = init_matrix(1, 3);
+	*(sizes.pt) = 625;
+	*(sizes.pt + 1) = 30;
+    *(sizes.pt + 2) = 10;
 
-	//Network net = LoadNetwork(sizes);
+	Network net = LoadNetwork(sizes);
     //free_network(net);
 
-	xor(sizes);
+	//xor(sizes);
 	free(sizes.pt);
-	*/
+	
 	// OCR
 
 	//Network net = CreateNetwork();
@@ -34,17 +33,16 @@ int main()
 	//TestNetwork(net);
 	//SaveNetwork(net);
 	
-	//Network net = LoadNetwork();
-	//print_network(net, 3);
+	print_network(net, 3);
 	//TestNetwork(net);
-	//free_network(net);
+	free_network(net);
     
-    Matrix M = SimulateSeg();
+    /*Matrix M = SimulateSeg();
     print_matrix(M);
     char s[100] = "";
     ApplyOCR(M, 1891, s);
     free(M.pt);
-    
+    */
     /*char s[100];
     xor_f(0, 0, s);
     printf("%s", s);*/

@@ -14,7 +14,8 @@ gchar *correction;
 int First_Time = 0;
 GtkWidget * ExtractBtn;
 GtkWidget * GetTextBtn;
-
+Network network;
+Network train;
 
 
 // Function which create an icon
@@ -93,6 +94,14 @@ void OK_Xor (GtkWidget * button, gpointer data)
     gtk_widget_destroy(Result);
 }
 
+
+void OK_Train (GtkWidget * button, gpointer data)
+{
+    printf("en cours d'entrainement\n");
+    TrainNetwork(train, 20000);
+    SaveNetwork(train);
+    printf("entrainement terminé\n");
+}
 
 /********************************* SETTINGS ********************************/
 void Exit_Settings (GtkWidget * button, gpointer data)
@@ -207,6 +216,9 @@ void Open_Settings (GtkWidget * button, gpointer data)
     Inputs_List = g_slist_append(Inputs_List, data);
     g_signal_connect(G_OBJECT(OK), "clicked", G_CALLBACK(OK_Xor), Inputs_List);
 
+    // When the user press train
+    g_signal_connect(G_OBJECT(Train), "clicked", G_CALLBACK(OK_Train), NULL);
+    
     // When the user press exit
     g_signal_connect(G_OBJECT(Exit), "clicked",
             G_CALLBACK(Exit_Settings), data);
@@ -331,12 +343,12 @@ void Open_File (GtkWidget * button, gpointer data)
 void Print_Text (GtkWidget * button, gpointer data)
 {
 	/////////////////////////////////
-	Matrix sizes = init_matrix(1, 3);
+	/*Matrix sizes = init_matrix(1, 3);
 	*(sizes.pt) = 625;
 	*(sizes.pt + 1) = 30;
 	*(sizes.pt + 2) = 10;
 
-	Network net = LoadNetwork(sizes);
+	Network net = LoadNetwork(sizes);*/
 	/////////////////////////////////
 
     button = button;
@@ -351,10 +363,7 @@ void Print_Text (GtkWidget * button, gpointer data)
     char st[100] = "";
 
 
-    ApplyOCR2(s, st, net);
-
-	free_network(net);
-	free(sizes.pt);
+    ApplyOCR2(s, st, network);
 
     gtk_text_buffer_set_text(text_buffer, st, -1);
 }
@@ -388,17 +397,17 @@ void Save (GtkWidget * button, gpointer data)
 int main(int argc, char **argv)
 {
 
-	/*Matrix sizes = init_matrix(1, 3);
+	Matrix sizes = init_matrix(1, 3);
 	*(sizes.pt) = 625;
 	*(sizes.pt + 1) = 30;
 	*(sizes.pt + 2) = 10;
 
-	Network net = LoadNetwork(sizes);
-	print_network(net, net.length);
+	network = LoadNetwork(sizes);
+	train = CreateNetwork();
+    print_network(network, 3);
 	
 	free(sizes.pt);
-	free_network(net);
-*/
+
 
 /*************** Variables ***************/
     GtkWidget * Settings = NULL;
@@ -553,6 +562,8 @@ int main(int argc, char **argv)
 
     /************* Leaving.. *************/
 
+	free_network(network);
+    free_network(train);
 	
     return EXIT_SUCCESS;
 
