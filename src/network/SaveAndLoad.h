@@ -8,6 +8,6 @@ typedef enum DataType{Weights, Bias}DataType;
 void SaveData(DataType type, StoreMatrix data);
 void SaveNetwork(Network net);
 StoreMatrix LoadData(DataType type);
-Network LoadNetwork();
+Network LoadNetwork(Matrix sizes);
 
 #endif

@@ -11,6 +11,6 @@ Network CreateNetwork ();
 int max_M(Matrix M);
 unsigned char convert_to_ascii(int pos);
 void ApplyOCR(Matrix images, int length, char str[]);
-Matrix SimulateSeg();
-void ApplyOCR2(char path[], char st[]);
+//Matrix SimulateSeg();
+void ApplyOCR2(char path[], char st[], Network net);
 #endif

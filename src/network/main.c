@@ -1,6 +1,9 @@
+#include <stdlib.h>
+#include <stdio.h>
 #include <gtk/gtk.h>
 #include "xor.h"
 #include "ImageTraining.h"
+#include "SaveAndLoad.h"
 
 /************************  Environment Variables  *************************/
 GtkWidget *MainWindow;
@@ -327,6 +330,16 @@ void Open_File (GtkWidget * button, gpointer data)
 /*************************** GET TEXT OCR ************************/
 void Print_Text (GtkWidget * button, gpointer data)
 {
+	/////////////////////////////////
+	Matrix sizes = init_matrix(1, 3);
+	*(sizes.pt) = 625;
+	*(sizes.pt + 1) = 30;
+	*(sizes.pt + 2) = 10;
+
+	Network net = LoadNetwork(sizes);
+	print_network(net, net.length);
+	/////////////////////////////////
+
     button = button;
     GtkTextBuffer * text_buffer=gtk_text_view_get_buffer(GTK_TEXT_VIEW(data));
 
@@ -336,9 +349,13 @@ void Print_Text (GtkWidget * button, gpointer data)
         s[i] = *path;
         path = path + 1; 
     }
-    char st[2] = "";
-    ApplyOCR2(s, st);
+    char st[100] = "";
 
+
+    ApplyOCR2(s, st, net);
+
+	free_network(net);
+	free(sizes.pt);
 
     gtk_text_buffer_set_text(text_buffer, st, -1);
 }
@@ -372,8 +389,20 @@ void Save (GtkWidget * button, gpointer data)
 int main(int argc, char **argv)
 {
 
+	/*Matrix sizes = init_matrix(1, 3);
+	*(sizes.pt) = 625;
+	*(sizes.pt + 1) = 30;
+	*(sizes.pt + 2) = 10;
+
+	Network net = LoadNetwork(sizes);
+	print_network(net, net.length);
+	
+	free(sizes.pt);
+	free_network(net);
+*/
+
 /*************** Variables ***************/
-/*    GtkWidget * Settings = NULL;
+    GtkWidget * Settings = NULL;
     GdkPixbuf * icon = create_pixbuf("Logo.png");
     GtkWidget * Logo;
     GtkWidget * QuitBtn;
@@ -387,36 +416,36 @@ int main(int argc, char **argv)
     GtkWidget * Text_Zone;
     GtkWidget * SaveBtn;
     GtkWidget * Arrow;
-    GtkWidget * Arrow2;*/
+    GtkWidget * Arrow2;
 /******************************************/
 
 
     /****** Initialisation of GTK+ ******/
 
-    //gtk_init(&argc, &argv);
+    gtk_init(&argc, &argv);
 
 
 
     /****** Window's creation *******/
 
-    /*MainWindow = gtk_window_new(GTK_WINDOW_TOPLEVEL); // constructor of window, type : normal window
+    MainWindow = gtk_window_new(GTK_WINDOW_TOPLEVEL); // constructor of window, type : normal window
     g_signal_connect(G_OBJECT(MainWindow), "delete-event", G_CALLBACK(gtk_main_quit), NULL);
-*/
+
 
 
     /****** Customization of the window ******/
 
-    /*gtk_window_set_title(GTK_WINDOW(MainWindow), "OCR DU TURFUX");
+    gtk_window_set_title(GTK_WINDOW(MainWindow), "OCR DU TURFUX");
 
     gtk_window_set_default_size(GTK_WINDOW(MainWindow), 500, 500);
 
     gtk_window_set_icon(GTK_WINDOW(MainWindow), icon);
-*/
+
 
 
     /****************** GtkButtons ********************/
 
-  /*  // -> Load
+    // -> Load
     LoadBtn = gtk_button_new_with_label("Load Image");
     gtk_table_attach(GTK_TABLE(Table), LoadBtn, 2, 6, 4, 6, GTK_EXPAND |
             GTK_FILL,
@@ -446,9 +475,9 @@ int main(int argc, char **argv)
     g_signal_connect(G_OBJECT(QuitBtn), "clicked",
            G_CALLBACK(gtk_main_quit), NULL);
 
-*/
+
     /************** Text Zone ********************/
-  /*  Text_Zone = gtk_text_view_new();
+    Text_Zone = gtk_text_view_new();
     gtk_table_attach(GTK_TABLE(Table), Text_Zone, 10, 31, 36, 39, GTK_EXPAND |
             GTK_FILL, GTK_EXPAND | GTK_FILL, 0, 0);
 
@@ -458,10 +487,9 @@ int main(int argc, char **argv)
             GTK_FILL,
             GTK_EXPAND | GTK_FILL, 0, 0);
     gtk_widget_set_sensitive(GetTextBtn, FALSE);
+
     g_signal_connect(G_OBJECT(GetTextBtn), "clicked", G_CALLBACK(Print_Text),
             Text_Zone);
-
-
 
     // -> Save Text
     SaveBtn = gtk_button_new_with_label("Save!");
@@ -469,16 +497,16 @@ int main(int argc, char **argv)
             GTK_FILL, GTK_EXPAND | GTK_FILL, 0, 0);
     g_signal_connect(G_OBJECT(SaveBtn), "clicked", G_CALLBACK(Save),
             Text_Zone);
-*/
+
 
     /************** File Selection ****************/
 
-    /*g_signal_connect(G_OBJECT(LoadBtn), "clicked", G_CALLBACK(Open_File),
-            ExtractBtn);*/
+    g_signal_connect(G_OBJECT(LoadBtn), "clicked", G_CALLBACK(Open_File),
+            ExtractBtn);
 
     /************** GtkFrames & Design ********************/
 
-    /*Frame = gtk_frame_new ("Menu");
+    Frame = gtk_frame_new ("Menu");
     gtk_frame_set_shadow_type (GTK_FRAME(Frame), GTK_SHADOW_ETCHED_IN);
     gtk_table_attach (GTK_TABLE(Table), Frame, 0, 8, 0, 42, GTK_EXPAND |
             GTK_FILL, GTK_EXPAND | GTK_FILL, 0, 0);
@@ -511,21 +539,23 @@ int main(int argc, char **argv)
     Arrow2 = gtk_image_new_from_pixbuf(test);
     gtk_table_attach (GTK_TABLE(Table), Arrow2, 3, 5, 15, 19, GTK_EXPAND |
           GTK_FILL, GTK_EXPAND | GTK_FILL | GTK_FILL, 0, 0);
-*/
+
     /************* ADD WIDGET IN MAINWINDOW ******************/
-  //  gtk_container_add(GTK_CONTAINER(MainWindow), Table);
+    gtk_container_add(GTK_CONTAINER(MainWindow), Table);
 
 
 
     /************* DISPLAY & EVENT LOOP *************/
-   /* gtk_widget_show_all(MainWindow);
+    gtk_widget_show_all(MainWindow);
     g_object_unref(icon);
     gtk_main();
-*/
+
 
 
     /************* Leaving.. *************/
-    //return EXIT_SUCCESS;
+
+	
+    return EXIT_SUCCESS;
 
     return 0;
 

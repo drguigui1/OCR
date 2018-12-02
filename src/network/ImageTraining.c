@@ -7,6 +7,7 @@
 
 #include "ImageTraining.h"
 #include "Network.h"
+#include "MathForOcr.h"
 #include "Matrix.h"
 #include "convert.h"
 #include "Image_Func.h"
@@ -308,15 +309,9 @@ Matrix SimulateSeg()
 }
 
 
-void ApplyOCR2(char path[], char st[])
+void ApplyOCR2(char path[], char st[], Network net)
 {
-    Matrix sizes = init_matrix(1, 3);
-    *(sizes.pt) = 625;
-    *(sizes.pt + 1) = 30;
-    *(sizes.pt + 2) = 10;
-    Network net = LoadNetwork(sizes);
-    //lancer OCR
-
+	//print_network(net, net.length);
     //--------------
 
     SDL_Surface* img = load_image(path);
@@ -347,8 +342,6 @@ void ApplyOCR2(char path[], char st[])
     Matrix O = *(Outputs.matrices + 2);
 
     char c = convert_to_ascii(max_M(O));
-    free_network(net);
-    free(sizes.pt);
     st[0] = c;
 
 }

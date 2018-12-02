@@ -120,6 +120,7 @@ StoreMatrix LoadData(DataType type)
 					s = fgets(s, 15, file);
 					strtok(s, "\n");
 					*(m.pt + j*columns + k) = atof(s);
+					printf("%d\n", *s);
 					free(s);
 				}
 			}
